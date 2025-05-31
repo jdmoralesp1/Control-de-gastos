@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using PruebaTecnicaMVC.AccesoDatos.Repositories.Repository;
 using PruebaTecnicaMVC.AccesoDatos.UnitOfWork;
 using PruebaTecnicaMVC.Modelos.DTOs;
@@ -31,6 +32,10 @@ public class PresupuestoDetalleController : Controller
 
     public IActionResult Index()
     {
+        string? fechapresupuesto = TempData["FechaPresupuesto"] as string;
+        if(!fechapresupuesto.IsNullOrEmpty())
+            TempData.Keep("FechaPresupuesto");
+
         return View();
     }
 

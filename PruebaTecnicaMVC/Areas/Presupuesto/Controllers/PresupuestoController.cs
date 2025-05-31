@@ -126,9 +126,12 @@ public class PresupuestoController : Controller
     }
 
     [HttpPost]
-    public void SetTempDataPresupuestoId(int id)
+    public async Task SetTempDataPresupuestoId(int id)
     {
         TempData["PresupuestoId"] = id;
+        var presupuesto = await presupuestoRepository.GetById(id);
+
+        TempData["FechaPresupuesto"] = $"{StringUtil.GetMonthName(presupuesto!.Mes)} {presupuesto.Anio.ToString()}";
     }
     #endregion
 }

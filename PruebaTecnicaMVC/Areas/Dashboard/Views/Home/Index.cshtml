@@ -36,7 +36,7 @@
         var year = today.getFullYear();
 
         // Llenar el select y cargar el gráfico inicial
-        fetch('/Dashboard/Home/ObtenerPresupuestos')
+        fetch('/Dashboard/Home/ObtenerPresupuestoVsGastos?anio=' + year)
             .then(response => response.json())
             .then(data => {
                 if (data.years && Array.isArray(data.years)) {
@@ -73,7 +73,7 @@
     var myChartInstance = null;
 
     function cargarData(year) {
-        fetch('/Dashboard/Home/ObtenerPresupuestos?anio=' + year)
+        fetch('/Dashboard/Home/ObtenerPresupuestoVsGastos?anio=' + year)
             .then(response => response.json())
             .then(result => {
                 var canvas = document.getElementById('myChart');
@@ -93,11 +93,18 @@
                         type: 'bar',
                         data: {
                             labels: result.months,
-                            datasets: [{
-                                label: 'Gastos',
-                                data: result.data,
-                                backgroundColor: 'rgba(54, 162, 235, 0.5)'
-                            }]
+                            datasets: [
+                                {
+                                    label: 'Presupuesto',
+                                    data: result.data,
+                                    backgroundColor: 'rgba(39, 61, 245, 0.8)'
+                                },
+                                {
+                                    label: 'Gastos',
+                                    data: result.dataGastos,
+                                    backgroundColor: 'rgba(245, 61, 61, 0.8)'
+                                }
+                            ]
                         }
                     });
                 }

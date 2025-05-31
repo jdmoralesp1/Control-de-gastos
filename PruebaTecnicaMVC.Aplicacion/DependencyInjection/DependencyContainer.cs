@@ -18,6 +18,7 @@ public static class DependencyContainer
 
         // Services
         services.AddScoped<IGastoService, GastoService>();
+        services.AddScoped<IIdentityService, IdentityService>();
         return services;
     }
 }

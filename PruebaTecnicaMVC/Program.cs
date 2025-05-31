@@ -1,13 +1,20 @@
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Localization;
 using Microsoft.EntityFrameworkCore;
 using PruebaTecnicaMVC.AccesoDatos.Data;
 using PruebaTecnicaMVC.AccesoDatos.Seed;
 using PruebaTecnicaMVC.Aplicacion.DependencyInjection;
+using System.Globalization;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Services.AddLocalization(options => options.ResourcesPath = "Resources");
+
 // Add services to the container.
-builder.Services.AddControllersWithViews().AddRazorRuntimeCompilation();
+builder.Services.AddControllersWithViews()
+    .AddRazorRuntimeCompilation()
+    .AddViewLocalization()
+    .AddDataAnnotationsLocalization();
 
 builder.Services.AddDbContext<PruebaTecnicaDbContext>(options =>
 {
@@ -28,7 +35,7 @@ builder.Services.AddIdentity<IdentityUser, IdentityRole>(options =>
 builder.Services.AddAuthentication()
     .AddCookie();
 
-
+builder.Services.AddHttpContextAccessor();
 
 #region Services
 
@@ -46,6 +53,18 @@ using (var scope = app.Services.CreateScope())
     await SeedUserData.Initialize(services);
     PruebaTecnicaDbContextInitialiser.Initialize(services);
 }
+
+CultureInfo.DefaultThreadCurrentCulture = new CultureInfo("es-ES");
+CultureInfo.DefaultThreadCurrentUICulture = new CultureInfo("es-ES");
+
+var supportedCultures = new[] { new CultureInfo("es-ES") };
+app.UseRequestLocalization(new RequestLocalizationOptions
+{
+    DefaultRequestCulture = new RequestCulture("es-ES"),
+    SupportedCultures = supportedCultures,
+    SupportedUICultures = supportedCultures
+});
+
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
