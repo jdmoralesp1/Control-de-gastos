@@ -55,14 +55,15 @@ function loadDataTable() {
 
 function Delete(url) {
 
-    swal({
+    Swal.fire({
         title: "Esta seguro de eliminar el detalle de presupuesto",
         text: "Este registro no se podra recuperar",
         icon: "warning",
-        buttons: true,
-        dangerMode: true
-    }).then((borrar) => {
-        if (borrar) {
+        showCancelButton: true,
+        confirmButtonText: "Sí, eliminar",
+        cancelButtonText: "Cancelar"
+    }).then((result) => {
+        if (result.isConfirmed) {
             $.ajax({
                 type: "DELETE",
                 url: url,

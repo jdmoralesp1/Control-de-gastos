@@ -51,15 +51,15 @@ function loadDataTable() {
 }
 
 function Delete(url) {
-
-    swal({
-        title: "Esta seguro de eliminar el fondo monetario",
+    Swal.fire({
+        title: "Esta seguro de eliminar el gasto",
         text: "Este registro no se podra recuperar",
         icon: "warning",
-        buttons: true,
-        dangerMode: true
-    }).then((borrar) => {
-        if (borrar) {
+        showCancelButton: true,
+        confirmButtonText: "Sí, eliminar",
+        cancelButtonText: "Cancelar"
+    }).then((result) => {
+        if (result.isConfirmed) {
             $.ajax({
                 type: "DELETE",
                 url: url,

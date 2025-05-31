@@ -31,20 +31,6 @@ function loadDataTable() {
             {
                 "data": "id",
                 "render": function (data) {
-                    //return `
-                    //    <div>
-                    //        <a href="/Presupuesto/Presupuesto/Upsert/${data}" class="btn btn-success text-white" style="cursor:pointer">
-                    //        <i class="bi bi-pencil-square"></i> Editar
-                    //        </a>
-                    //        <a onclick=Delete("/Presupuesto/Presupuesto/Delete/${data}") class="btn btn-danger text-white" style="cursor:pointer">
-                    //        <i class="bi bi-trash3-fill"></i> Eliminar
-                    //        </a>
-                    //        <a href="/Presupuesto/PresupuestoDetalle" class="btn btn-primary text-white" style="cursor:pointer">
-                    //        <i class="bi bi-arrow-up-right-square-fill"></i> Modificar Detalle
-                    //        </a>
-                    //    </div>
-                    //`;
-
                     return `
                         <div>
                             <a href="/Presupuesto/Presupuesto/Upsert/${data}" class="btn btn-success text-white" style="cursor:pointer">
@@ -80,15 +66,15 @@ function modificarDetallePresupuesto(id) {
 
 
 function Delete(url) {
-
-    swal({
+    Swal.fire({
         title: "Esta seguro de eliminar el presupuesto",
         text: "Este registro no se podra recuperar",
         icon: "warning",
-        buttons: true,
-        dangerMode: true
-    }).then((borrar) => {
-        if (borrar) {
+        showCancelButton: true,
+        confirmButtonText: "Sí, eliminar",
+        cancelButtonText: "Cancelar"
+    }).then((result) => {
+        if (result.isConfirmed) {
             $.ajax({
                 type: "DELETE",
                 url: url,

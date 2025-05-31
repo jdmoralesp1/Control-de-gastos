@@ -28,10 +28,6 @@ public class PruebaTecnicaDbContext : IdentityDbContext<IdentityUser, IdentityRo
             .HasIndex(p => new { p.PresupuestoId, p.TipoGastoId })
             .IsUnique();
 
-        modelBuilder.Entity<Presupuesto>()
-            .HasIndex(p => new { p.Mes, p.Anio })
-            .IsUnique();
-
         modelBuilder.Entity<TipoGasto>()
             .HasIndex(t => t.Codigo)
             .IsUnique();

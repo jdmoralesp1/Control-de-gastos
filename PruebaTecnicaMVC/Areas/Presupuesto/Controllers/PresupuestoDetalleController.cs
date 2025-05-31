@@ -124,9 +124,13 @@ public class PresupuestoDetalleController : Controller
         if (presupuestoDetalle.Id != 0)
             presupuestoDetalleOriginal = (await presupuestoDetalleRepository.GetById(presupuestoDetalle.Id))!;
 
-        if (await presupuestoDetalleRepository.GetFirstOrDefaultAsync(x =>
-                                            x.TipoGastoId == presupuestoDetalle.TipoGastoId &&
-                                            (presupuestoDetalle.Id == 0 || x.Id != presupuestoId)
+        if (await presupuestoDetalleRepository.GetAsyncInclude(
+                                                predicate: x =>
+                                                    x.TipoGastoId == presupuestoDetalle.TipoGastoId &&
+                                                    x.Presupuesto.Anio == presupuestoAModificar.Anio &&
+                                                    x.Presupuesto.Mes == presupuestoAModificar.Mes &&
+                                                    (presupuestoDetalle.Id == 0 || x.Id != presupuestoId),
+                                                include: x => x.Include(x => x.Presupuesto)
                                         ) is not null)
         {
             TempData[StaticDefinitions.Error] = "Ya existe un detalle del presupuesto con el tipo de gasto ingresado.";

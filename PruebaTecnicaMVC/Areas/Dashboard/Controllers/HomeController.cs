@@ -1,8 +1,11 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using PruebaTecnicaMVC.AccesoDatos.Repositories.Repository;
+using PruebaTecnicaMVC.Modelos.Entities;
 using PruebaTecnicaMVC.Modelos.ViewModel;
 using PruebaTecnicaMVC.Utilidades;
 using System.Diagnostics;
+using PruebaTecnicaMVC.Utilidades;
 
 namespace PruebaTecnicaMVC.Areas.Dashboard.Controllers
 {
@@ -10,19 +13,14 @@ namespace PruebaTecnicaMVC.Areas.Dashboard.Controllers
     [Authorize(Roles = StaticDefinitions.Role_Admin)]
     public class HomeController : Controller
     {
-        private readonly ILogger<HomeController> _logger;
+        private readonly IRepository<Presupuesto> presupuestoRepository;
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(IRepository<Presupuesto> presupuestoRepository)
         {
-            _logger = logger;
+            this.presupuestoRepository = presupuestoRepository;
         }
 
         public IActionResult Index()
-        {
-            return View();
-        }
-
-        public IActionResult Privacy()
         {
             return View();
         }
@@ -40,5 +38,26 @@ namespace PruebaTecnicaMVC.Areas.Dashboard.Controllers
             return View("Error");
         }
 
+        #region API
+
+        [HttpGet]
+        public async Task<IActionResult> ObtenerPresupuestos(int? anio)
+        {
+            IEnumerable<Presupuesto> presupuestos = await presupuestoRepository.GetAsync(
+                                                            whereCondition: x => 
+                                                                                x.Activo && 
+                                                                                x.UsuarioId == Guid.Parse("e16bfd7a-a24b-40c6-92d4-dbddb739fb47") &&
+                                                                                (!anio.HasValue || x.Anio == anio),
+                                                            orderBy: x => x.OrderBy(x => x.Anio).ThenBy(x => x.Mes));
+
+            string[] months = presupuestos.Select(x => StringUtil.GetMonthName(x.Mes)).ToArray();
+            string[] years = presupuestos.Select(x => x.Anio.ToString()).ToHashSet().ToArray();
+            decimal[] data = presupuestos.Select(x => x.MontoTotal).ToArray();
+
+            return Json(new { months, years, data });
+
+            #endregion
+
+        } 
     }
 }

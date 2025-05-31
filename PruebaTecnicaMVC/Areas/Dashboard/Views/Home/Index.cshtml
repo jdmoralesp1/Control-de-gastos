@@ -2,20 +2,105 @@
     ViewData["Title"] = "Home Page";
 }
 
+<div class="row g-3">
+    <div class="d-flex flex-wrap justify-content-between align-items-center mb-3 col-12 col-md-6">
+        <h2 class="text-primary mb-3 mb-md-0" id="titulo"></h2>
+    </div>
+    <div class="col-12 col-md-6 d-flex justify-content-end align-items-center">
+        <label class="mb-0">Año:</label>
+        <select id="anioSelect" class="form-select ms-2 auto-width-select"></select>
+    </div>
+</div>
+
+<style>
+    .auto-width-select {
+        width: auto;
+        min-width: 80px;
+        max-width: 100%;
+    }
+</style>
+
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <canvas id="myChart"></canvas>
+<div id="noDataMessage" class="d-none text-center p-5 rounded shadow" style="background: #f8f9fc; min-height: 300px; display: flex; align-items: center; justify-content: center;">
+    <div>
+        <i class="bi bi-emoji-frown" style="font-size: 3rem; color: #4e73df;"></i>
+        <h4 class="mt-3 mb-2 text-secondary">No hay registros para el año actual</h4>
+        <p class="mb-0">Por favor selecciona otro año disponible para ver los datos.</p>
+    </div>
+</div>
 <script>
-    var ctx = document.getElementById('myChart').getContext('2d');
-    var myChart = new Chart(ctx, {
-        type: 'bar',
-        data: {
-            labels: ['Enero', 'Febrero', 'Marzo'],
-            datasets: [{
-                label: 'Gastos',
-                data: [120, 190, 300],
-                backgroundColor: 'rgba(54, 162, 235, 0.5)'
-            }]
-        }
-    });
-</script>
+    document.addEventListener("DOMContentLoaded", function () {
+        var select = document.getElementById("anioSelect");
+        var today = new Date();
+        var year = today.getFullYear();
 
+        // Llenar el select y cargar el gráfico inicial
+        fetch('/Dashboard/Home/ObtenerPresupuestos')
+            .then(response => response.json())
+            .then(data => {
+                if (data.years && Array.isArray(data.years)) {
+                    // Elimina duplicados
+                    const uniqueYears = [...new Set(data.years)];
+                    uniqueYears.forEach(function (item) {
+                        var option = document.createElement("option");
+                        option.value = item;
+                        option.text = item;
+                        select.appendChild(option);
+                    });
+                    // Selecciona el año actual si está disponible, si no el primero
+                    if (uniqueYears.includes(year.toString())) {
+                        select.value = year;
+                    } else if (uniqueYears.length > 0) {
+                        select.value = uniqueYears[0];
+                        year = uniqueYears[0];
+                    }
+                    // Cargar datos iniciales
+                    document.getElementById("titulo").innerHTML = "Presupuesto Total Del Año - " + year;
+                    cargarData(select.value);
+                }
+            });
+
+        // Evento para cambio de año
+        select.addEventListener("change", function () {
+            var selectedYear = this.value;
+            document.getElementById("titulo").innerHTML = "Presupuesto Total Del Año - " + selectedYear;
+            cargarData(selectedYear);
+        });
+    });
+
+    // Variable global para destruir el gráfico anterior
+    var myChartInstance = null;
+
+    function cargarData(year) {
+        fetch('/Dashboard/Home/ObtenerPresupuestos?anio=' + year)
+            .then(response => response.json())
+            .then(result => {
+                var canvas = document.getElementById('myChart');
+                var noDataDiv = document.getElementById('noDataMessage');
+                // Destruir gráfico anterior si existe
+                if (myChartInstance) {
+                    myChartInstance.destroy();
+                }
+                if (!result.data || result.data.length === 0) {
+                    canvas.style.display = 'none';
+                    noDataDiv.classList.remove('d-none');
+                } else {
+                    canvas.style.display = '';
+                    noDataDiv.classList.add('d-none');
+                    var ctx = canvas.getContext('2d');
+                    myChartInstance = new Chart(ctx, {
+                        type: 'bar',
+                        data: {
+                            labels: result.months,
+                            datasets: [{
+                                label: 'Gastos',
+                                data: result.data,
+                                backgroundColor: 'rgba(54, 162, 235, 0.5)'
+                            }]
+                        }
+                    });
+                }
+            });
+    }
+</script>
