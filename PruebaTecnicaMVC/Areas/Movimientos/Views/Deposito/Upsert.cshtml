@@ -1,0 +1,92 @@
+﻿@model PruebaTecnicaMVC.Modelos.Entities.Deposito
+
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    string titulo = Model.Id != 0 ? "Actualizar Depósito" : "Crear Depósito";
+}
+
+<div class="container py-4">
+    <div class="row justify-content-center">
+        <div class="col-lg-8 col-md-10">
+            <div class="card shadow border-0">
+                <div class="card-header bg-primary text-white">
+                    <h3 class="mb-0">@titulo</h3>
+                </div>
+                <div class="card-body">
+                    <form method="post" autocomplete="off">
+                        <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
+
+                        @if (Model.Id != 0)
+                        {
+                            <input type="hidden" asp-for="Id" />
+                            <input type="hidden" asp-for="FechaCreacion" />
+                            <input type="hidden" asp-for="UsuarioId" />
+                        }
+
+                        <div class="mb-3">
+                            <label asp-for="Fecha" class="form-label">Fecha</label>
+                            <input type="date" asp-for="Fecha" class="form-control" />
+                            <span asp-validation-for="Fecha" class="text-danger"></span>
+                        </div>
+                        <div class="mb-3">
+                            <label asp-for="FondoMonetarioId" class="form-label">Fondo Monetario</label>
+                            <select id="fondoMonetarioSelect" name="FondoMonetarioId" class="form-control"></select>
+                            <span asp-validation-for="FondoMonetarioId" class="text-danger"></span>
+                        </div>
+                        <div class="mb-3">
+                            <label asp-for="Monto" class="form-label">Monto</label>
+                            <input type="number" asp-for="Monto" class="form-control" min="1" />
+                            <span asp-validation-for="Monto" class="text-danger"></span>
+                        </div>
+                        <div class="mb-3">
+                            <label asp-for="Observaciones" class="form-label">Observaciones</label>
+                            <textarea asp-for="Observaciones" class="form-control" placeholder="Observaciones del depósito" rows="4"></textarea>
+                            <span asp-validation-for="Observaciones" class="text-danger"></span>
+                        </div>
+
+                        <div class="d-flex justify-content-end gap-2 mt-4">
+                            @if (Model.Id != 0)
+                            {
+                                <partial name="_BotonesActualizarYRegresar" model="Model.Id" />
+                            }
+                            else
+                            {
+                                <partial name="_BotonesCrearYRegresar" />
+                            }
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            var select = document.getElementById("fondoMonetarioSelect");
+            var selectedId = '@Model.FondoMonetarioId';
+
+            fetch('/Admin/FondoMonetario/GetAll')
+                .then(response => response.json())
+                .then(data => {
+                    if (data.data && Array.isArray(data.data)) {
+                        data.data.forEach(function (item) {
+                            var option = document.createElement("option");
+                            option.value = item.id;
+                            option.text = item.nombre;
+                            if (item.id == selectedId) {
+                                option.selected = true;
+                            }
+                            select.appendChild(option);
+                        });
+                    }
+                });
+        });
+    </script>
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/froms.css" asp-append-version="true" />
+}

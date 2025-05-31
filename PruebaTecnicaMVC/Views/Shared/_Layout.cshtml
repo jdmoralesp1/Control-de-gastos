@@ -1,0 +1,226 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - PruebaTecnicaMVC</title>
+    <!-- Fuente de Google para mejor tipografía -->
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.3/font/bootstrap-icons.css">
+
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.3/css/jquery.dataTables.min.css" />
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" />
+
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/PruebaTecnicaMVC.styles.css" asp-append-version="true" />
+    <style>
+        :root {
+            --primary-color: #4e73df;
+            --secondary-color: #f8f9fc;
+            --accent-color: #2e59d9;
+        }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #f8f9fc;
+        }
+
+        .navbar {
+            box-shadow: 0 0.15rem 1.75rem 0 rgba(58, 59, 69, 0.15);
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--accent-color) 100%) !important;
+        }
+
+        .navbar-brand, .nav-link {
+            color: white !important;
+            font-weight: 500;
+        }
+
+        .navbar-brand {
+            font-size: 1.5rem;
+            display: flex;
+            align-items: center;
+        }
+
+        .navbar-brand i {
+            margin-right: 10px;
+        }
+
+        .dropdown-menu {
+            border: none;
+            box-shadow: 0 0.15rem 1.75rem 0 rgba(58, 59, 69, 0.15);
+        }
+
+        .dropdown-item {
+            transition: all 0.3s;
+        }
+
+        .dropdown-item:hover {
+            background-color: var(--secondary-color);
+            transform: translateX(5px);
+        }
+
+        .container {
+            max-width: 1400px;
+        }
+
+        .card {
+            border: none;
+            border-radius: 0.35rem;
+            box-shadow: 0 0.15rem 1.75rem 0 rgba(58, 59, 69, 0.1);
+            margin-bottom: 1.5rem;
+        }
+
+        .card-header {
+            background-color: white;
+            border-bottom: 1px solid #e3e6f0;
+            font-weight: 500;
+        }
+
+        footer {
+            background-color: white;
+            box-shadow: 0 -0.15rem 1.75rem 0 rgba(58, 59, 69, 0.1);
+        }
+
+        .btn-primary {
+            background-color: var(--primary-color);
+            border-color: var(--primary-color);
+        }
+
+        .btn-primary:hover {
+            background-color: var(--accent-color);
+            border-color: var(--accent-color);
+        }
+
+        /* Efecto hover para items de navegación */
+        .nav-item {
+            position: relative;
+            margin: 0 5px;
+        }
+
+        .nav-item:after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: 0;
+            left: 0;
+            background-color: white;
+            visibility: hidden;
+            transition: all 0.3s ease-in-out;
+        }
+
+        .nav-item:hover:after {
+            visibility: visible;
+            width: 100%;
+        }
+
+        html, body {
+            height: 100%;
+        }
+
+        body {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .container {
+            flex: 1 0 auto;
+        }
+
+        footer {
+            flex-shrink: 0;
+            width: 100%;
+        }
+    </style>
+    @RenderSection("Styles", required: false)
+
+</head>
+<body>
+    <header>
+        <nav class="navbar navbar-expand-lg navbar-dark sticky-top">
+            <div class="container-fluid">
+                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">
+                    <i class="bi bi-cash-stack"></i>Control de Gastos
+                </a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarContent">
+                    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                        <li class="nav-item">
+                            <a class="nav-link" asp-area="Admin" asp-controller="TipoGasto" asp-action="Index"><i class="bi bi-tags me-2">
+                                </i>Tipos de gasto
+                            </a>
+                        </li>
+
+                        <li>
+                            <a class="nav-link" asp-area="Admin" asp-controller="FondoMonetario" asp-action="Index"><i class="bi bi-wallet2 me-2"></i>Fondos monetarios</a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a class="nav-link" asp-area="Presupuesto" asp-controller="Presupuesto" asp-action="Index">
+                                <i class="bi bi-clipboard-data me-1"></i>Presupuesto
+                            </a>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">
+                                <i class="bi bi-arrow-left-right me-1"></i>Movimientos
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" asp-area="Movimientos" asp-controller="Deposito" asp-action="Index"><i class="bi bi-arrow-down-circle me-2"></i>Depósitos</a></li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li><a class="dropdown-item" asp-area="Movimientos" asp-controller="Gasto" asp-action="Index"><i class="bi bi-arrow-up-circle me-2"></i>Gastos</a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                    <div class="d-flex align-items-center text-white">
+                        <i class="bi bi-person-circle me-2"></i>
+                        <span>Usuario</span>
+                    </div>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <div class="container py-4">
+        <main role="main">
+            <partial name="_Notificaciones" />
+            @RenderBody()
+        </main>
+    </div>
+
+    <footer class="py-3 mt-auto">
+        <div class="container d-flex flex-wrap justify-content-between align-items-center">
+            <p class="col-md-4 mb-0 text-muted">&copy; 2025 PruebaTecnicaMVC</p>
+            <ul class="nav col-md-4 justify-content-end">
+                <li class="nav-item"><a href="#" class="nav-link px-2 text-muted">Inicio</a></li>
+                <li class="nav-item"><a href="#" class="nav-link px-2 text-muted">Acerca de</a></li>
+                <li class="nav-item"><a href="#" class="nav-link px-2 text-muted">Contacto</a></li>
+                <li class="nav-item"><a asp-area="" asp-controller="Home" asp-action="Privacy" class="nav-link px-2 text-muted">Privacidad</a></li>
+            </ul>
+        </div>
+    </footer>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    <script src="https://cdn.datatables.net/1.13.3/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+    <script>
+        if (!sessionStorage.getItem('jwtToken')) {
+            window.location.href = '/Identity/Login/Index';
+        }
+
+        // Activar tooltips
+        $(function () {
+            $('[data-bs-toggle="tooltip"]').tooltip();
+        });
+    </script>
+
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

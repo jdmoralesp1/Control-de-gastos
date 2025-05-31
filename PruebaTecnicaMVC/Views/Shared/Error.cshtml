@@ -1,0 +1,24 @@
+﻿@using PruebaTecnicaMVC.Modelos.ViewModel
+@model ErrorViewModel
+@{
+    ViewData["Title"] = "Error";
+}
+
+@if (Model is not null)
+{ 
+    @if (Model.ShowRequestId)
+    {
+        <p>
+            <strong>Request ID:</strong> <code>@Model.RequestId</code>
+        </p>
+    }
+}
+
+<script>
+    if (!sessionStorage.getItem('jwtToken')) {
+        window.location.href = '/Identity/Login/Index';
+    }
+    else{
+        window.location.href = '/Dashboard/Home/Index';
+    }
+</script>

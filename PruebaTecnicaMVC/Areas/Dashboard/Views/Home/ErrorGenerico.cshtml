@@ -1,0 +1,12 @@
+﻿
+@{
+    ViewData["Title"] = "ErrorGenerico";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<script>
+    if (!sessionStorage.getItem('jwtToken')) {
+        window.location.href = '/Identity/Login/Index';
+    }
+</script>
+<h1>Página no encontrada</h1>
+

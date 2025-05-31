@@ -1,0 +1,232 @@
+﻿@model PruebaTecnicaMVC.Modelos.DTOs.GastoDto
+
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    string titulo = "Agregar Gasto";
+}
+
+<form method="post">
+    <div class="container py-4">
+        <div class="row justify-content-center">
+            <div class="col-12 col-md-10 col-lg-8">
+                <div class="card shadow border-0">
+                    <div class="card-body">
+                        <div class="row border-0">
+                            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                        </div>
+
+                        @if (Model.GastoEncabezado.Id != 0)
+                        {
+                            // Actualizar
+                            titulo = "Actualizar Gasto";
+                            <input type="hidden" asp-for="GastoEncabezado.Id" id="id" />
+                            <input type="hidden" asp-for="GastoEncabezado.FechaCreacion" id="fechaCreacion" />
+                            <input type="hidden" asp-for="GastoEncabezado.UsuarioId" id="usuarioId" />
+                        }
+                        <div class="col-12 border-bottom p-0 mb-3">
+                            <h2 class="text-primary">@titulo</h2>
+                        </div>
+
+                        <div class="row g-3">
+                            <div class="col-12 col-md-6">
+                                <label>Fecha</label>
+                                <input type="date" asp-for="GastoEncabezado.Fecha" class="form-control" />
+                                <span asp-validation-for="GastoEncabezado.Fecha" class="text-danger"></span>
+                            </div>
+                            <div class="col-12 col-md-6">
+                                <label>Fondo Monetario</label>
+                                <select id="fondoMonetarioSelect" name="GastoEncabezado.FondoMonetarioId" class="form-control"></select>
+                                <span asp-validation-for="GastoEncabezado.FondoMonetarioId" class="text-danger"></span>
+                            </div>
+                            <div class="col-12 col-md-6">
+                                <label>Nombre Comercio</label>
+                                <input type="text" asp-for="GastoEncabezado.NombreComercio" class="form-control" placeholder="Ej: Falabella, Exito, Jumbo, Totto, Restaurante.etc" />
+                                <span asp-validation-for="GastoEncabezado.NombreComercio" class="text-danger"></span>
+                            </div>
+                            <div class="col-12 col-md-6">
+                                <label>Tipo Documento (Opcional)</label>
+                                <input type="text" asp-for="GastoEncabezado.TipoDocumento" class="form-control" placeholder="Ej: Comprobante, Factura, Otro" />
+                                <span asp-validation-for="GastoEncabezado.TipoDocumento" class="text-danger"></span>
+                            </div>
+                            <div class="col-12 col-md-6">
+                                <label>Numero Documento (Opcional)</label>
+                                <input type="text" asp-for="GastoEncabezado.NumeroDocumento" class="form-control" placeholder="Numero Documento del deposito" />
+                                <span asp-validation-for="GastoEncabezado.NumeroDocumento" class="text-danger"></span>
+                            </div>
+                            <div class="col-12 col-md-6">
+                                <label>Observaciones (opcional)</label>
+                                <textarea asp-for="GastoEncabezado.Observaciones" class="form-control" placeholder="Observaciones del deposito" rows="2"></textarea>
+                                <span asp-validation-for="GastoEncabezado.Observaciones" class="text-danger"></span>
+                            </div>
+                        </div>
+
+                        @* Sección de detalles *@
+                        <div class="col-12 border-bottom p-0 mt-4">
+                            <h3 class="text-primary">Detalle del gasto</h3>
+                            <ul>
+                                <li>Aca podras desglosar tu factura si por ejemplo se dividio en diferentes cosas, por ejemplo: gaste 120 en una maleta y 10 en un llavero, cada uno separado</li>
+                                <li>O si solo es un unico detalle entonces solo llena el que esta a continuación</li>
+                            </ul>
+                        </div>
+                        <br />
+
+                        <div id="detallesContainer" class="row g-3">
+                            @for (int i = 0; i < Model.Detalle.Count; i++)
+                            {
+                                <div class="col-12 col-md-6">
+                                    <div class="detalle-item mb-3 border rounded p-2 position-relative h-100">
+                                        <button type="button" class="btn btn-outline-danger btn-sm eliminar-detalle position-absolute top-0 end-0 m-2" title="Eliminar detalle">
+                                            <i class="fas fa-times"></i>
+                                        </button>
+                                        <input type="hidden" name="Detalle[@i].Id" value="@Model.Detalle[i].Id" />
+                                        <div class="mb-2">
+                                            <label>Tipo de Gasto</label>
+                                            <select name="Detalle[@i].TipoGastoId" class="form-control tipo-gasto-select" data-index="@i" data-selected="@Model.Detalle[i].TipoGastoId"></select>
+                                        </div>
+                                        <div class="mb-2">
+                                            <label>Monto</label>
+                                            <input type="number" name="Detalle[@i].Monto" class="form-control" min="1" value="@Model.Detalle[i].Monto" />
+                                            <span asp-validation-for="Detalle[@i].Monto" class="text-danger"></span>
+                                        </div>
+                                        <div class="mb-2">
+                                            <label>Descripción</label>
+                                            <input type="text" name="Detalle[@i].Descripcion" class="form-control" value="@Model.Detalle[i].Descripcion" required />
+                                            <span asp-validation-for="Detalle[@i].Descripcion" class="text-danger"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+
+                        <div class="text-end">
+                            <button type="button" class="btn btn-secondary" id="agregarDetalle">Agregar Detalle</button>
+                        </div>
+
+                        <br />
+                        <div>
+                            @if (Model.GastoEncabezado.Id != 0)
+                            {
+                                <partial name="_BotonesActualizarYRegresar" model="Model.GastoEncabezado.Id" />
+                            }
+                            else
+                            {
+                                <partial name="_BotonesCrearYRegresar" />
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        let detalleIndex = @Model.Detalle.Count;
+
+        document.getElementById('agregarDetalle').addEventListener('click', function () {
+            const container = document.getElementById('detallesContainer');
+            const colDiv = document.createElement('div');
+            colDiv.className = 'col-12 col-md-6';
+            colDiv.innerHTML = `
+                <div class="detalle-item mb-3 border rounded p-2 position-relative h-100">
+                    <button type="button" class="btn btn-outline-danger btn-sm eliminar-detalle position-absolute top-0 end-0 m-2" title="Eliminar detalle">
+                        <i class="fas fa-times"></i>
+                    </button>
+                    <input type="hidden" name="Detalle[${detalleIndex}].Id" value="0" />
+                    <div class="mb-2">
+                        <label>Tipo de Gasto</label>
+                        <select name="Detalle[${detalleIndex}].TipoGastoId" class="form-control tipo-gasto-select" data-index="${detalleIndex}"></select>
+                    </div>
+                    <div class="mb-2">
+                        <label>Monto</label>
+                        <input type="number" name="Detalle[${detalleIndex}].Monto" min="1" class="form-control" />
+                        <span asp-validation-for="Detalle[${detalleIndex}].Monto" class="text-danger"></span>
+                    </div>
+                    <div class="mb-2">
+                        <label>Descripción</label>
+                        <input type="text" name="Detalle[${detalleIndex}].Descripcion" required class="form-control" />
+                        <span asp-validation-for="Detalle[${detalleIndex}].Descripcion" class="text-danger"></span>
+                    </div>
+                </div>
+            `;
+            container.appendChild(colDiv);
+            cargarTipoGastoSelect(colDiv.querySelector('.tipo-gasto-select'));
+            detalleIndex++;
+            $.validator.unobtrusive.parse('#detallesContainer');
+        });
+
+        // Eliminar detalle solo si hay más de uno
+        document.addEventListener('click', function (e) {
+            if (e.target.closest('.eliminar-detalle')) {
+                const container = document.getElementById('detallesContainer');
+                if (container.children.length > 1) {
+                    e.target.closest('.col-12').remove();
+                } else {
+                    alert('Debe haber al menos un detalle.');
+                }
+            }
+        });
+
+        document.addEventListener("DOMContentLoaded", function () {
+            var select = document.getElementById("fondoMonetarioSelect");
+            var selectedId = '@Model.GastoEncabezado.FondoMonetarioId';
+
+            fetch('/Admin/FondoMonetario/GetAll')
+                .then(response => response.json())
+                .then(data => {
+                    if (data.data && Array.isArray(data.data)) {
+                        data.data.forEach(function (item) {
+                            var option = document.createElement("option");
+                            option.value = item.id;
+                            option.text = item.nombre;
+                            if (item.id == selectedId) {
+                                option.selected = true;
+                            }
+                            select.appendChild(option);
+                        });
+                    }
+                });
+        });
+    </script>
+    <script>
+        let tipoGastoData = [];
+
+        function cargarTipoGastoSelect(select, selectedValue = null) {
+            if (tipoGastoData.length > 0) {
+                llenarSelectTipoGasto(select, selectedValue);
+                return;
+            }
+            fetch('/Admin/TipoGasto/GetAll')
+                .then(response => response.json())
+                .then(data => {
+                    tipoGastoData = data.data || [];
+                    llenarSelectTipoGasto(select, selectedValue);
+                });
+        }
+
+        function llenarSelectTipoGasto(select, selectedValue) {
+            tipoGastoData.forEach(item => {
+                const option = document.createElement('option');
+                option.value = item.id;
+                option.text = item.nombre;
+                if (selectedValue && item.id == selectedValue) {
+                    option.selected = true;
+                }
+                select.appendChild(option);
+            });
+        }
+
+        document.addEventListener("DOMContentLoaded", function () {
+            document.querySelectorAll('.tipo-gasto-select').forEach(function (select) {
+                const selected = select.getAttribute('data-selected');
+                cargarTipoGastoSelect(select, selected);
+            });
+        });
+    </script>
+}
+
+@section Styles {
+    
+}

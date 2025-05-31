@@ -1,0 +1,21 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<canvas id="myChart"></canvas>
+<script>
+    var ctx = document.getElementById('myChart').getContext('2d');
+    var myChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: ['Enero', 'Febrero', 'Marzo'],
+            datasets: [{
+                label: 'Gastos',
+                data: [120, 190, 300],
+                backgroundColor: 'rgba(54, 162, 235, 0.5)'
+            }]
+        }
+    });
+</script>
+

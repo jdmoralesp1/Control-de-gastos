@@ -1,0 +1,39 @@
+﻿@{
+    ViewData["Title"] = "Tipos de Gastos";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container-fluid px-0">
+    <div class="d-flex flex-wrap justify-content-between align-items-center mb-3">
+        <h2 class="text-primary mb-3 mb-md-0">Tipos de Gastos</h2>
+        <a class="btn btn-primary shadow-sm" href="/Admin/TipoGasto/Upsert">
+            <i class="bi bi-plus-square-fill me-1"></i> Crear Nuevo Tipo De Gasto
+        </a>
+    </div>
+
+    <div class="card shadow-sm border-0">
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table id="tblDatos" class="table table-striped table-bordered table-hover align-middle mb-0 display nowrap" style="width:100%">
+                    <thead class="table-primary">
+                        <tr>
+                            <th>Código</th>
+                            <th>Nombre</th>
+                            <th>Descripción</th>
+                            <th>Fecha Creación</th>
+                            <th class="text-center">Acciones</th>
+                        </tr>
+                    </thead>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="~/js/tipogasto.js"></script>
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/datatables.css" asp-append-version="true" />
+}

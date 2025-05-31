@@ -1,0 +1,14 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\PruebaTecnicaMVC.AccesoDatos\PruebaTecnicaMVC.AccesoDatos.csproj" />
+    <ProjectReference Include="..\PruebaTecnicaMVC.Modelos\PruebaTecnicaMVC.Modelos.csproj" />
+  </ItemGroup>
+
+</Project>
