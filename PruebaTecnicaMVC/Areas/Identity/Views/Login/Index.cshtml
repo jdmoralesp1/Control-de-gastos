@@ -4,56 +4,231 @@
     ViewData["Title"] = "Iniciar Sesión";
     Layout = null;
 }
+
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - PruebaTecnicaMVC</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/PruebaTecnicaMVC.styles.css" asp-append-version="true" />
-    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.3/css/jquery.dataTables.min.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.3/font/bootstrap-icons.css">
+    <style>
+        :root {
+            --primary-color: #6a5acd; /* Cambiado a tono lavanda */
+            --primary-light: #9370db; /* Lavanda claro */
+            --primary-dark: #483d8b; /* Azul oscuro morado */
+            --secondary-color: #f8f9fc;
+            --accent-color: #7b68ee; /* Azul medio morado */
+            --card-bg: #ffffff;
+            --bg-gradient: linear-gradient(135deg, #e6e6fa 0%, #d8bfd8 100%); /* Gradiente morado claro */
+            --text-color: #4a4a4a;
+            --text-light: #6c757d;
+            --error-color: #e74a3b;
+        }
+
+        html, body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            background: var(--bg-gradient);
+            color: var(--text-color);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+            align-items: flex-start; /* Cambiado de center a flex-start */
+            padding-top: 5vh;
+        }
+
+        .login-wrapper {
+            width: 100%;
+            max-width: 420px;
+            animation: fadeIn 0.5s ease-in-out;
+        }
+
+        
+
+        .app-brand {
+            text-align: center;
+            margin-bottom: 2rem;
+            color: var(--primary-color);
+        }
+
+            .app-brand i {
+                font-size: 2.5rem;
+                margin-bottom: 0.5rem;
+                display: block;
+            }
+
+            .app-brand h1 {
+                font-weight: 700;
+                font-size: 1.8rem;
+                margin: 0;
+                letter-spacing: 0.5px;
+            }
+
+        .login-card {
+            border: none;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(58, 59, 69, 0.1);
+            background: var(--card-bg);
+            overflow: hidden;
+        }
+
+        .login-header {
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
+            color: white;
+            padding: 1.5rem;
+            text-align: center;
+        }
+
+            .login-header i {
+                font-size: 2rem;
+                margin-bottom: 0.5rem;
+            }
+
+            .login-header h2 {
+                font-size: 1.3rem;
+                font-weight: 500;
+                margin: 0;
+            }
+
+        .card-body {
+            padding: 2rem;
+        }
+
+        .form-label {
+            font-weight: 500;
+            color: var(--text-color);
+            margin-bottom: 0.5rem;
+        }
+
+        .form-control {
+            padding: 0.75rem 1rem;
+            border-radius: 8px;
+            border: 1px solid #e0e0e0;
+            transition: all 0.3s;
+        }
+
+            .form-control:focus {
+                border-color: var(--primary-light);
+                box-shadow: 0 0 0 0.2rem rgba(78, 115, 223, 0.25);
+            }
+
+        .btn-login {
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
+            border: none;
+            padding: 0.75rem;
+            font-weight: 500;
+            letter-spacing: 0.5px;
+            border-radius: 8px;
+            transition: all 0.3s;
+            text-transform: uppercase;
+            font-size: 0.9rem;
+            color: white !important;
+        }
+
+            .btn-login:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 5px 15px rgba(78, 115, 223, 0.3);
+            }
+
+        .text-danger {
+            color: var(--error-color);
+            font-size: 0.85rem;
+            margin-top: 0.25rem;
+            display: block;
+        }
+
+        .alert-danger {
+            background-color: rgba(231, 74, 59, 0.1);
+            border-color: rgba(231, 74, 59, 0.2);
+            color: var(--error-color);
+            font-size: 0.9rem;
+            border-radius: 8px;
+            padding: 0.75rem 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .form-footer {
+            text-align: center;
+            margin-top: 1.5rem;
+            color: var(--text-light);
+            font-size: 0.85rem;
+        }
+
+        /* Efectos adicionales */
+        .login-card:hover {
+            box-shadow: 0 15px 35px rgba(58, 59, 69, 0.15);
+            transition: all 0.3s ease;
+        }
+
+        /* Responsive adjustments */
+        
+    </style>
 </head>
 <body>
-    <div class="d-flex justify-content-center align-items-center vh-100" style="background: #f8f9fa;">
-        <div class="col-md-4">
-            <div class="card shadow">
-                <div class="card-header bg-primary text-white text-center">
-                    <h4>Iniciar Sesión</h4>
-                </div>
-                <div class="card-body">
-                    <form id="loginForm" autocomplete="off">
-                        <div class="mb-3">
-                            <label asp-for="UserName" class="form-label">Usuario</label>
-                            <input asp-for="UserName" class="form-control" placeholder="Ingrese su usuario" />
-                            <span asp-validation-for="UserName" class="text-danger"></span>
-                        </div>
-                        <div class="mb-3">
-                            <label asp-for="Password" class="form-label">Contraseña</label>
-                            <input asp-for="Password" class="form-control" type="password" placeholder="Ingrese su contraseña" />
-                            <span asp-validation-for="Password" class="text-danger"></span>
-                        </div>
-                        <div class="d-grid">
-                            <button type="submit" class="btn btn-primary">Entrar</button>
-                        </div>
-                    </form>
-                </div>
+    <div class="login-wrapper">
+        <div class="app-brand">
+            <i class="bi bi-cash-stack"></i>
+            <h1>Control de Gastos</h1>
+        </div>
+
+        <div class="login-card shadow">
+            <div class="login-header">
+                <i class="bi bi-person-circle"></i>
+                <h2>Iniciar Sesión</h2>
+            </div>
+
+            <div class="card-body">
+                <form id="loginForm" autocomplete="off">
+                    <div asp-validation-summary="ModelOnly" class="alert alert-danger d-none" role="alert"></div>
+
+                    <div class="mb-3">
+                        <label asp-for="UserName" class="form-label">Usuario</label>
+                        <input asp-for="UserName" class="form-control" placeholder="Ingrese su usuario" />
+                        <span asp-validation-for="UserName" class="text-danger"></span>
+                    </div>
+
+                    <div class="mb-4">
+                        <label asp-for="Password" class="form-label">Contraseña</label>
+                        <input asp-for="Password" class="form-control" type="password" placeholder="Ingrese su contraseña" />
+                        <span asp-validation-for="Password" class="text-danger"></span>
+                    </div>
+
+                    <div class="d-grid">
+                        <button type="submit" class="btn btn-login">Entrar</button>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
+
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="~/js/site.js" asp-append-version="true"></script>
-    <script src="https://cdn.datatables.net/1.13.3/js/jquery.dataTables.min.js"></script>
     <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
-    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+
     <script>
         $(document).ready(function () {
+            // Efecto de carga suave
+            $('.login-wrapper').hide().fadeIn(400);
+
             $('#loginForm').submit(function (e) {
                 e.preventDefault();
+
+                // Mostrar loader
+                const btn = $(this).find('button[type="submit"]');
+                btn.html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Procesando...');
+                btn.prop('disabled', true);
 
                 var data = {
                     UserName: $('#UserName').val(),
@@ -66,15 +241,31 @@
                     contentType: 'application/json',
                     data: JSON.stringify(data),
                     success: function (response) {
-                        // Guardar el token en sessionStorage
                         sessionStorage.setItem('jwtToken', response.token);
-                        // Redirigir a la página principal o dashboard
-                        window.location.href = '/Dashboard/Home/Index';
+
+                        // Redirección con animación
+                        $('.login-wrapper').fadeOut(300, function() {
+                            window.location.href = '/Dashboard/Home/Index';
+                        });
                     },
-                    error: function () {
-                        swal("Error", "Usuario o contraseña incorrectos. Inténtalo de nuevo.", "error");
+                    error: function (xhr) {
+                        btn.html('Entrar');
+                        btn.prop('disabled', false);
+
+                        if (xhr.status === 401) {
+                            swal("Error", "Usuario o contraseña incorrectos", "error");
+                        } else {
+                            swal("Error", "Ocurrió un problema al intentar iniciar sesión", "error");
+                        }
                     }
                 });
+            });
+
+            // Efecto hover en inputs
+            $('input').on('focus', function() {
+                $(this).parent().find('label').css('color', 'var(--primary-color)');
+            }).on('blur', function() {
+                $(this).parent().find('label').css('color', 'var(--text-color)');
             });
         });
     </script>

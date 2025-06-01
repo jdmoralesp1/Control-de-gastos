@@ -6,8 +6,6 @@ using PruebaTecnicaMVC.Modelos.DTOs;
 using PruebaTecnicaMVC.Modelos.Entities;
 using PruebaTecnicaMVC.Modelos.Wrapper;
 using PruebaTecnicaMVC.Utilidades;
-using System.Globalization;
-using System.Linq;
 
 namespace PruebaTecnicaMVC.Areas.Presupuestos.Controllers;
 
@@ -54,7 +52,7 @@ public class PresupuestoController : Controller
         IEnumerable<Presupuesto> presupuestos = await presupuestoRepository
                                                         .GetAsync(
                                                             whereCondition: x => x.Activo == true && x.UsuarioId == Guid.Parse("e16bfd7a-a24b-40c6-92d4-dbddb739fb47"), //TODO cambiar cuando ya acceda al id del usuario
-                                                            orderBy: x => x.OrderByDescending(x => x.Anio).OrderByDescending(x => x.Mes));
+                                                            orderBy: x => x.OrderByDescending(x => x.Anio).ThenByDescending(x => x.Mes));
 
         IEnumerable<PresupuestoDto> presupuestosResponse = presupuestos.Select(x => new PresupuestoDto(
             x.Id,

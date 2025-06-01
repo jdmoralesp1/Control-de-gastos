@@ -6,6 +6,7 @@ $(document).ready(function () {
 
 function loadDataTable() {
     datatable = $('#tblDatos').DataTable({
+        "order": [[0, "desc"]],
         "language": {
             "lengthMenu": "Mostrar _MENU_ Registros Por Pagina",
             "zeroRecords": "Ningun Registro",
@@ -24,7 +25,23 @@ function loadDataTable() {
             "url": "/Movimientos/Deposito/GetAll"
         },
         "columns": [
-            { "data": "fecha", "width": "20%" },
+            {
+                "data": "fecha",
+                "type": "date",
+                "width": "20%",
+                "render": function (data, type, row) {
+                    if (!data) return "";
+                    var dateObj = new Date(data);
+                    // Si el tipo es 'display', muestra como dd-MM-yyyy, si no, retorna el valor original para ordenar/filtrar
+                    if (type === 'display' || type === 'filter') {
+                        let day = String(dateObj.getDate()).padStart(2, '0');
+                        let month = String(dateObj.getMonth() + 1).padStart(2, '0');
+                        let year = dateObj.getFullYear();
+                        return `${day}-${month}-${year}`;
+                    }
+                    return data;
+                }
+            },
             { "data": "fondoMonetario", "width": "20%" },
             { "data": "monto", "width": "20%" },
             { "data": "observaciones", "width": "30%" },

@@ -37,4 +37,13 @@ public class LoginController : Controller
 
         return Unauthorized();
     }
+
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> Logout()
+    {
+        await signInManager.SignOutAsync();
+        return RedirectToAction("Index", "Login", new { area = "Identity" });
+    }
+
 }

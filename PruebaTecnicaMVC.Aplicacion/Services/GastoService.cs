@@ -55,7 +55,7 @@ public class GastoService : IGastoService
         respuesta.Add((StaticDefinitions.Exitosa, mensajeInsertUpdate));
 
         if (nuevoSaldoFondoMonetario < 0)
-            stringBuilder.AppendLine($"Ha sobregirado el fondo monetario {fondoMonetario.Nombre} quedando con un saldo de {StringUtil.ConvertToMoneyFormat(nuevoSaldoFondoMonetario)}");
+            stringBuilder.AppendLine($"<b>{fondoMonetario.Nombre}:</b> Ha sobregirado el fondo monetario quedando con un saldo de {StringUtil.ConvertToMoneyFormat(nuevoSaldoFondoMonetario)}");
 
         fondoMonetario.SaldoActual = nuevoSaldoFondoMonetario;
         await fondoMonetarioRepository.UpdateAsync(fondoMonetario);

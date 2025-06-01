@@ -1,0 +1,133 @@
+﻿@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="row g-3">
+    <div class="d-flex flex-wrap justify-content-between align-items-center mb-3 col-12 col-md-6">
+        <h2 class="text-primary mb-3 mb-md-0" id="titulo"></h2>
+    </div>
+    <div class="col-12 col-md-6 d-flex justify-content-end align-items-center">
+        <label class="mb-0">Año:</label>
+        <select id="anioSelect" class="form-select ms-2 auto-width-select"></select>
+        <label class="mb-0 ms-3">Mes:</label>
+        <select id="mesSelect" class="form-select ms-2 auto-width-select"></select>
+    </div>
+</div>
+
+<style>
+    .auto-width-select {
+        width: auto;
+        min-width: 80px;
+        max-width: 100%;
+    }
+</style>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<canvas id="myChart"></canvas>
+<div id="noDataMessage" class="d-none text-center p-5 rounded shadow" style="background: #f8f9fc; min-height: 300px; display: flex; align-items: center; justify-content: center;">
+    <div>
+        <i class="bi bi-emoji-frown" style="font-size: 3rem; color: #4e73df;"></i>
+        <h4 class="mt-3 mb-2 text-secondary">No hay registros para los parametros seleccionados</h4>
+        <p class="mb-0">Por favor selecciona otro año y mes disponibles para ver los datos.</p>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const selectAnio = document.getElementById("anioSelect");
+        const selectMes = document.getElementById("mesSelect");
+        const meses = [
+            "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio",
+            "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"
+        ];
+
+        var today = new Date();
+        var actualYear = today.getFullYear();
+        var actualMonth = today.getMonth() + 1;
+
+        // Llenar selects de año y mes
+        fetch('/Reportes/ReportePorMes/ObtenerReportePorAñoYMes?anio='+actualYear+'&mes='+actualMonth)
+            .then(response => response.json())
+            .then(data => {
+                // Llenar años
+                if (data.years && Array.isArray(data.years)) {
+                    const uniqueYears = [...new Set(data.years)];
+                    uniqueYears.forEach(function (item) {
+                        var option = document.createElement("option");
+                        option.value = item;
+                        option.text = item;
+                        selectAnio.appendChild(option);
+                    });
+                }
+                // Llenar meses (siempre 1-12)
+                for (let i = 1; i <= 12; i++) {
+                    var option = document.createElement("option");
+                    option.value = i;
+                    option.text = meses[i - 1];
+                    selectMes.appendChild(option);
+                }
+                // Seleccionar año y mes actual
+                const today = new Date();
+                selectAnio.value = today.getFullYear();
+                selectMes.value = today.getMonth() + 1;
+                cargarData(selectAnio.value, selectMes.value);
+            });
+
+        selectAnio.addEventListener("change", function () {
+            cargarData(selectAnio.value, selectMes.value);
+        });
+        selectMes.addEventListener("change", function () {
+            cargarData(selectAnio.value, selectMes.value);
+        });
+
+        var myChartInstance = null;
+
+        function cargarData(anio, mes) {
+            fetch(`/Reportes/ReportePorMes/ObtenerReportePorAñoYMes?anio=${anio}&mes=${mes}`)
+                .then(response => response.json())
+                .then(result => {
+                    var canvas = document.getElementById('myChart');
+                    var noDataDiv = document.getElementById('noDataMessage');
+                    if (myChartInstance) {
+                        myChartInstance.destroy();
+                    }
+                    if (!result.tiposGasto || result.tiposGasto.length === 0) {
+                        canvas.style.display = 'none';
+                        noDataDiv.classList.remove('d-none');
+                    } else {
+                        canvas.style.display = '';
+                        noDataDiv.classList.add('d-none');
+                        var ctx = canvas.getContext('2d');
+                        myChartInstance = new Chart(ctx, {
+                            type: 'bar',
+                            data: {
+                                labels: result.tiposGasto,
+                                datasets: [
+                                    {
+                                        label: 'Presupuesto',
+                                        data: result.presupuestosList,
+                                        backgroundColor: 'rgba(39, 61, 245, 0.8)'
+                                    },
+                                    {
+                                        label: 'Gasto',
+                                        data: result.gastosList,
+                                        backgroundColor: 'rgba(245, 61, 61, 0.8)'
+                                    }
+                                ]
+                            },
+                            options: {
+                                responsive: true,
+                                plugins: {
+                                    legend: { position: 'top' }
+                                }
+                            }
+                        });
+                        // Actualiza el título
+                        document.getElementById("titulo").innerHTML = `Reporte por tipo de gasto - ${meses[mes - 1]} ${anio}`;
+                    }
+                });
+        }
+    });
+</script>

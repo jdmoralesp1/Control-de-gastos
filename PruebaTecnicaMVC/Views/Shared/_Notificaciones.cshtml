@@ -21,13 +21,17 @@
 
 @if (TempData[StaticDefinitions.Advertencia] != null)
 {
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    var advertenciaHtml = TempData[StaticDefinitions.Advertencia]?.ToString() ?? "";
+
     <script type="text/javascript">
-        Swal.fire({
-            icon: 'warning',
-            title: 'Se ha pasado del presupuesto',
-            html: '@Html.Raw(TempData[StaticDefinitions.Advertencia])',
-            confirmButtonText: 'OK'
+        document.addEventListener("DOMContentLoaded", function () {
+            var advertenciaHtml = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(advertenciaHtml));
+            Swal.fire({
+                icon: 'warning',
+                title: 'Se ha pasado del presupuesto',
+                html: advertenciaHtml,
+                confirmButtonText: 'OK'
+            });
         });
     </script>
 }

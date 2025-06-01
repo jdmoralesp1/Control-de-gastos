@@ -6,6 +6,7 @@ $(document).ready(function () {
 
 function loadDataTable() {
     datatable = $('#tblDatos').DataTable({
+        "order": [[0, "desc"]],
         "language": {
             "lengthMenu": "Mostrar _MENU_ Registros Por Pagina",
             "zeroRecords": "Ningun Registro",
@@ -49,6 +50,7 @@ function loadDataTable() {
         ]
     });
 }
+
 
 function modificarDetallePresupuesto(id) {
     $.ajax({

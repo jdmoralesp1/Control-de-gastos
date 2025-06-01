@@ -55,13 +55,13 @@ public class DepositoController : Controller
         IEnumerable<Deposito> fondosMonetarios = await depositoRepository
                                                         .GetAsync(
                                                             whereCondition: x => x.UsuarioId == Guid.Parse("e16bfd7a-a24b-40c6-92d4-dbddb739fb47"), //TODO cambiar cuando ya acceda al id del usuario
-                                                            orderBy: x => x.OrderBy(x => x.Fecha), 
+                                                            orderBy: x => x.OrderByDescending(x => x.Fecha), 
                                                             includeProperties: nameof(FondoMonetario)
                                                         );
 
         IEnumerable<DepositoDto> fondosMonetarioResponse = fondosMonetarios.Select(x => new DepositoDto(
             x.Id,
-            TimeUtil.DateTimeToFormatDDMMYYYY(x.Fecha),
+            x.Fecha,
             x.FondoMonetario.Nombre,
             StringUtil.ConvertToMoneyFormat(x.Monto),
             x.Observaciones

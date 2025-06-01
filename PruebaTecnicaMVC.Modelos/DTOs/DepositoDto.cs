@@ -2,7 +2,7 @@
 public record struct DepositoDto
 (
     int Id,
-    string Fecha,
+    DateTime Fecha,
     string FondoMonetario,
     string Monto,
     string? Observaciones

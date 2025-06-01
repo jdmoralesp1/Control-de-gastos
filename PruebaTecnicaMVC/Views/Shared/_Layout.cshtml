@@ -175,11 +175,44 @@
                                 <li><a class="dropdown-item" asp-area="Movimientos" asp-controller="Gasto" asp-action="Index"><i class="bi bi-arrow-up-circle me-2"></i>Gastos</a></li>
                             </ul>
                         </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">
+                                <i class="bi bi-bar-chart me-1"></i>Reportes
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li>
+                                    <a class="dropdown-item" asp-area="Dashboard" asp-controller="Home" asp-action="Index">
+                                        <i class="bi bi-calendar3 me-2"></i>Por Año
+                                    </a>
+                                </li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li>
+                                    <a class="dropdown-item" asp-area="Reportes" asp-controller="ReportePorMes" asp-action="Index">
+                                        <i class="bi bi-calendar2-month me-2"></i>Por Mes
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+
                     </ul>
-                    <div class="d-flex align-items-center text-white">
-                        <i class="bi bi-person-circle me-2"></i>
-                        <span>Usuario</span>
+                    <div class="dropdown">
+                        <a class="d-flex align-items-center text-white text-decoration-none dropdown-toggle" href="#" id="userDropdown" data-bs-toggle="dropdown" aria-expanded="false" style="cursor:pointer;">
+                            <i class="bi bi-person-circle me-2"></i>
+                            <span>Usuario</span>
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+                            <li>
+                                @Html.AntiForgeryToken()
+                                <form method="post" asp-area="Identity" asp-controller="Login" asp-action="Logout" style="margin:0;">
+                                    <button type="submit" class="dropdown-item">
+                                        <i class="bi bi-box-arrow-right me-2"></i>Cerrar sesión
+                                    </button>
+                                </form>
+                            </li>
+                        </ul>
                     </div>
+
+
                 </div>
             </div>
         </nav>

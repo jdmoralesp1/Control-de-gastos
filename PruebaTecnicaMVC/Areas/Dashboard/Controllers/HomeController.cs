@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Mvc;
 using PruebaTecnicaMVC.AccesoDatos.Repositories.Repository;
 using PruebaTecnicaMVC.Aplicacion.Services.Contracts;
-using PruebaTecnicaMVC.Modelos.DTOs;
 using PruebaTecnicaMVC.Modelos.Entities;
 using PruebaTecnicaMVC.Modelos.ViewModel;
 using PruebaTecnicaMVC.Utilidades;
@@ -80,7 +79,6 @@ namespace PruebaTecnicaMVC.Areas.Dashboard.Controllers
                                                                 includeProperties: nameof(GastoEncabezado.Detalles)
                                                             )
                                                 )
-                                                //.Select(x => new GastoReporteDto(x.Fecha.Month, x.MontoTotal))
                                                 .GroupBy(x => x.Fecha.Month)
                                                 .ToDictionary(x=> x.Key, x => x.ToList());
 

@@ -36,7 +36,7 @@
         var year = today.getFullYear();
 
         // Llenar el select y cargar el gráfico inicial
-        fetch('/Dashboard/Home/ObtenerPresupuestoVsGastos?anio=' + year)
+        fetch('/Dashboard/Home/ObtenerPresupuestoVsGastos')
             .then(response => response.json())
             .then(data => {
                 if (data.years && Array.isArray(data.years)) {
@@ -100,7 +100,7 @@
                                     backgroundColor: 'rgba(39, 61, 245, 0.8)'
                                 },
                                 {
-                                    label: 'Gastos',
+                                    label: 'Gasto',
                                     data: result.dataGastos,
                                     backgroundColor: 'rgba(245, 61, 61, 0.8)'
                                 }
