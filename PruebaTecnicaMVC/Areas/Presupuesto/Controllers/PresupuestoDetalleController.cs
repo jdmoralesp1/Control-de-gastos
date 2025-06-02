@@ -134,7 +134,7 @@ public class PresupuestoDetalleController : Controller
                                                     x.TipoGastoId == presupuestoDetalle.TipoGastoId &&
                                                     x.Presupuesto.Anio == presupuestoAModificar.Anio &&
                                                     x.Presupuesto.Mes == presupuestoAModificar.Mes &&
-                                                    (presupuestoDetalle.Id == 0 || x.Id != presupuestoId),
+                                                    (presupuestoDetalle.Id == 0 || x.Id == presupuestoId),
                                                 include: x => x.Include(x => x.Presupuesto)
                                         ) is not null)
         {

@@ -47,7 +47,10 @@ public class GastoService : IGastoService
         gastoEncabezado.MontoTotal = gasto.Detalle.Sum(x => x.Monto);
         gastoEncabezado.Detalles = gasto.Detalle;
 
-        StringBuilder stringBuilder = await CalculosAlPresupuesto(gasto, presupuesto!, gastoEncabezado);
+        StringBuilder stringBuilder = new();
+
+        if(presupuesto is not null)
+            stringBuilder = await CalculosAlPresupuesto(gasto, presupuesto!, gastoEncabezado);
 
         (decimal nuevoSaldoFondoMonetario, string mensajeInsertUpdate) = gasto.GastoEncabezado.Id != 0 
                                                                             ? await ActualizarGastoEncabezado(gasto, gastoEncabezado, fondoMonetario!.SaldoActual)
@@ -88,11 +91,6 @@ public class GastoService : IGastoService
                                                     include: x => x.Include(x => x.Detalles)
                                                     );
 
-        if (presupuesto is null)
-        {
-            return ("No existe un presupuesto para la fecha seleccionada, creelo e intentelo de nuevo.", null, null);
-        }
-
         FondoMonetario? fondoMonetario = await fondoMonetarioRepository.GetById(gasto.GastoEncabezado.FondoMonetarioId);
 
         if (fondoMonetario is null)
@@ -105,17 +103,18 @@ public class GastoService : IGastoService
             return ("Debe seleccionar un solo tipo de gasto los detalles del gasto.", null, null);
         }
 
-        if(presupuesto.Detalles.FirstOrDefault(x => x.TipoGastoId == gasto.Detalle.FirstOrDefault()!.TipoGastoId) is null)
-        {
-            return ("El tipo de gasto seleccionado no existe en el presupuesto, por favor creelo antes de usarlo.", null, null);
-        }
-
         return (null, presupuesto, fondoMonetario);
     }
 
     private async Task<StringBuilder> CalculosAlPresupuesto(GastoDto gasto, Presupuesto presupuesto, GastoEncabezado gastoEncabezado)
     {
-        TipoGasto tipoGasto = (await tipoGastoRepository.GetById(gasto.Detalle.FirstOrDefault()!.TipoGastoId))!;
+        int tipoGastoId = gasto.Detalle.FirstOrDefault()!.TipoGastoId;
+
+
+        if (!presupuesto.Detalles.Any(x => x.TipoGastoId == tipoGastoId))
+            return new StringBuilder();
+
+        TipoGasto tipoGasto = (await tipoGastoRepository.GetById(tipoGastoId))!;
 
         int totalDaysInMonth = DateTime.DaysInMonth(year, month);
 

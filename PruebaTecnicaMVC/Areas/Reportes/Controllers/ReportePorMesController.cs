@@ -36,8 +36,9 @@ public class ReportePorMesController : Controller
         Guid userId = identityService.ObtenerUsuarioId();
         List<decimal> dataGastos = [];
 
-        IEnumerable<Presupuesto> todosLosPresupuestos = await presupuestoRepository.GetAsync(x => x.Activo &&x.UsuarioId == userId);
-        string[]? years = todosLosPresupuestos.Select(x => x.Anio.ToString()).ToHashSet().ToArray();
+        IEnumerable<Presupuesto> todosLosPresupuestos = presupuestoRepository.GetAsyncAsNoTracking(x => x.Activo && x.UsuarioId == userId);
+        IEnumerable<GastoEncabezado> todosLosGastos = gastoEncabezadoRepository.GetAsyncAsNoTracking(x => x.UsuarioId == userId);
+        string[]? years = todosLosPresupuestos.Select(x => x.Anio).Union(todosLosGastos.Select(x => x.Fecha.Year)).OrderBy(x => x).Select(x => x.ToString()).ToHashSet().ToArray();
 
         IEnumerable<Presupuesto> presupuestos = await presupuestoRepository.GetAsync(
                                                         whereCondition: x =>
@@ -52,45 +53,49 @@ public class ReportePorMesController : Controller
         List<decimal> presupuestosList = [];
         List<decimal> gastosList = [];
 
-        if (presupuestos.Any())
+
+        Dictionary<int, string> tiposGastoDictionary = (await tipoGastoRepository.GetAsync()).ToDictionary(x => x.Id, x => x.Nombre);
+        var presupuestoPorTipoGasto = presupuestos.SelectMany(x => x.Detalles).GroupBy(x => x.TipoGastoId).ToDictionary(x => x.Key, x => x.ToList());
+
+
+        int totalDaysInmonth = DateTime.DaysInMonth(anio, mes);
+
+        IEnumerable<GastoEncabezado> gastos = await gastoEncabezadoRepository.GetAsync(
+                                                            whereCondition: x =>
+                                                                x.Fecha >= new DateTime(anio, mes, 1) &&
+                                                                x.Fecha <= new DateTime(anio, mes, totalDaysInmonth, 23, 59, 59) &&
+                                                                x.UsuarioId == userId,
+                                                            orderBy: x => x.OrderBy(x => x.Fecha),
+                                                            includeProperties: nameof(GastoEncabezado.Detalles)
+                                                        );
+
+        if(!presupuestos.Any() && !gastos.Any())
+            return Json(new { tiposGasto, presupuestosList, gastosList, years });
+
+        Dictionary<int, List<GastoDetalle>> gastosPorTipoGasto = gastos
+                                                                    .SelectMany(x => x.Detalles)
+                                                                    .GroupBy(x => x.TipoGastoId)
+                                                                    .ToDictionary(x => x.Key, x => x.ToList());
+
+        HashSet<int> tposGastoExistentes = presupuestoPorTipoGasto.Select(x => x.Key).ToList().Union(gastosPorTipoGasto.Select(x => x.Key).ToList()).ToHashSet();
+
+        foreach (var item in tposGastoExistentes)
         {
-            Dictionary<int, string> tiposGastoDictionary = (await tipoGastoRepository.GetAsync()).ToDictionary(x => x.Id, x => x.Nombre);
-            var presupuestoPorTipoGasto = presupuestos.SelectMany(x => x.Detalles).GroupBy(x => x.TipoGastoId).ToDictionary(x => x.Key, x => x.ToList());
+            if (tiposGastoDictionary.TryGetValue(item, out string? tipoGastoNombre))
+                tiposGasto.Add(tipoGastoNombre);
 
+            if (presupuestoPorTipoGasto.TryGetValue(item, out List<PresupuestoDetalle>? listaDetallesPresupuesto))
+                presupuestosList.Add(listaDetallesPresupuesto.Sum(x => x.MontoPresupuestado));
+            else
+                presupuestosList.Add(0);
 
-            int totalDaysInmonth = DateTime.DaysInMonth(anio, mes);
-            var gastosPorTipoGasto = (await gastoEncabezadoRepository.GetAsync(
-                                                                whereCondition: x =>
-                                                                    x.Fecha >= new DateTime(anio, mes, 1) &&
-                                                                    x.Fecha <= new DateTime(anio, mes, totalDaysInmonth, 23, 59, 59) &&
-                                                                    x.UsuarioId == userId,
-                                                                orderBy: x => x.OrderBy(x => x.Fecha),
-                                                                includeProperties: nameof(GastoEncabezado.Detalles)
-                                                            )
-                                                )
-                                                .SelectMany(x => x.Detalles)
-                                                .GroupBy(x => x.TipoGastoId)
-                                                .ToDictionary(x => x.Key, x => x.ToList());
-
-            HashSet<int> tposGastoExistentes = presupuestoPorTipoGasto.Select(x => x.Key).ToList().Union(gastosPorTipoGasto.Select(x => x.Key).ToList()).ToHashSet();
-
-            foreach (var item in tposGastoExistentes)
-            {
-                if(tiposGastoDictionary.TryGetValue(item, out string? tipoGastoNombre))
-                    tiposGasto.Add(tipoGastoNombre);
-
-                if (presupuestoPorTipoGasto.TryGetValue(item, out List<PresupuestoDetalle>? listaDetallesPresupuesto))
-                    presupuestosList.Add(listaDetallesPresupuesto.Sum(x => x.MontoPresupuestado));
-                else
-                    presupuestosList.Add(0);
-
-                if (gastosPorTipoGasto.TryGetValue(item, out List<GastoDetalle>? listaDetallesGasto))
-                    gastosList.Add(listaDetallesGasto.Sum(x => x.Monto));
-                else
-                    gastosList.Add(0);
-            }
+            if (gastosPorTipoGasto.TryGetValue(item, out List<GastoDetalle>? listaDetallesGasto))
+                gastosList.Add(listaDetallesGasto.Sum(x => x.Monto));
+            else
+                gastosList.Add(0);
         }
 
+
         return Json(new { tiposGasto, presupuestosList, gastosList, years });
-    }                                                               
+    }
 }

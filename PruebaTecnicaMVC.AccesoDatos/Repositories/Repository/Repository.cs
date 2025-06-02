@@ -130,8 +130,16 @@ public class Repository<TEntity>(PruebaTecnicaDbContext _context) : RepositoryBa
     {
         return await _context.Set<TEntity>().FindAsync(id)!;
     }
-    public IQueryable<TEntity> Query()
+    public IEnumerable<TEntity> GetAsyncAsNoTracking(Expression<Func<TEntity, bool>>? whereCondition = null)
     {
-        return _context.Set<TEntity>().AsQueryable();
+        IQueryable<TEntity> query = _context.Set<TEntity>();
+
+
+        if (whereCondition is not null)
+        {
+            query = query.Where(whereCondition);
+        }
+
+        return query.AsNoTracking().ToList();
     }
 }

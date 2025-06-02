@@ -19,6 +19,6 @@ public interface IRepository<TEntity> : IRepositoryBase<TEntity> where TEntity :
     public Task<TEntity?> GetAsyncInclude(Expression<Func<TEntity, bool>>? predicate = null, Func<IQueryable<TEntity>, IQueryable<TEntity>> include = null);
     public Task<IEnumerable<TEntity>> GetAllAsyncInclude(Expression<Func<TEntity, bool>>? predicate = null, Func<IQueryable<TEntity>, IQueryable<TEntity>> include = null);
     public Task<TEntity?> GetById(int id);
-    public IQueryable<TEntity> Query();
+    public IEnumerable<TEntity> GetAsyncAsNoTracking(Expression<Func<TEntity, bool>>? whereCondition = null);
 
 }

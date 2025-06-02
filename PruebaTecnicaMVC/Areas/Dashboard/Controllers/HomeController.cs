@@ -1,7 +1,9 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using NuGet.Packaging;
 using PruebaTecnicaMVC.AccesoDatos.Repositories.Repository;
 using PruebaTecnicaMVC.Aplicacion.Services.Contracts;
+using PruebaTecnicaMVC.Modelos.DTOs;
 using PruebaTecnicaMVC.Modelos.Entities;
 using PruebaTecnicaMVC.Modelos.ViewModel;
 using PruebaTecnicaMVC.Utilidades;
@@ -49,6 +51,9 @@ namespace PruebaTecnicaMVC.Areas.Dashboard.Controllers
         {
             Guid userId = identityService.ObtenerUsuarioId();
             List<decimal> dataGastos = [];
+            string[]? months = [];
+            string[]? years = [];
+            List<decimal>? data = [];
 
             IEnumerable<Presupuesto> presupuestos = await presupuestoRepository.GetAsync(
                                                             whereCondition: x => 
@@ -57,39 +62,59 @@ namespace PruebaTecnicaMVC.Areas.Dashboard.Controllers
                                                                                 (!anio.HasValue || x.Anio == anio),
                                                             orderBy: x => x.OrderBy(x => x.Anio).ThenBy(x => x.Mes));
 
-            int[]monthInNumbers = presupuestos.Select(x => x.Mes).ToArray();
+            IEnumerable<GastoEncabezado>? gastos = (await gastoEncabezadoRepository.GetAsync(
+                                                            whereCondition: x =>
+                                                                (!anio.HasValue || x.Fecha >= new DateTime(anio.Value, 1, 1)) &&
+                                                                (!anio.HasValue || x.Fecha <= new DateTime(anio.Value, 12, 31, 23, 59, 59)) &&
+                                                                x.UsuarioId == userId,
+                                                            orderBy: x => x.OrderBy(x => x.Fecha),
+                                                            includeProperties: nameof(GastoEncabezado.Detalles)
+                                                        )
+                                            );
 
-            string[]? months = monthInNumbers.Select(x => StringUtil.GetMonthName(x)).ToArray();
-            string[]? years = presupuestos.Select(x => x.Anio.ToString()).ToHashSet().ToArray();
-            decimal[]? data = presupuestos.Select(x => x.MontoTotal).ToArray();
+            if (!presupuestos.Any() && !gastos.Any())
+                return Json(new { months, years, data, dataGastos });
 
-            Presupuesto? presupuestInicial = presupuestos.FirstOrDefault();
-            Presupuesto? presupuestFinal = presupuestos.LastOrDefault();
+            var gastosPorAnioMes = gastos
+                                    .GroupBy(x => new AnioYMesDto { Anio = x.Fecha.Year, Mes = x.Fecha.Month })
+                                    .OrderBy(g => g.Key.Anio)
+                                    .ThenBy(g => g.Key.Mes)
+                                    .ToList();
 
-            if (presupuestos.Any())
+            HashSet<int> monthInNumbers = (presupuestos.Select(x => x.Mes).Union(gastosPorAnioMes.Select(x => x.Key.Mes))).ToHashSet();
+            HashSet<int> yearsInNumbers = gastosPorAnioMes.Select(x => x.Key.Anio).Union(presupuestos.Select(x => x.Anio)).ToHashSet();
+
+            months = monthInNumbers.Select(x => StringUtil.GetMonthName(x)).ToArray();
+            years = yearsInNumbers.Select(x => x.ToString()).ToArray();
+
+            if (!anio.HasValue)
+                return Json(new { months, years, data, dataGastos });
+
+            foreach (var itemYear in yearsInNumbers)
             {
-                int totalDaysInmonth = DateTime.DaysInMonth(presupuestFinal!.Anio, presupuestFinal.Mes);
-
-                var gastos = (await gastoEncabezadoRepository.GetAsync(
-                                                                whereCondition: x =>
-                                                                    x.Fecha >= new DateTime(presupuestInicial!.Anio, presupuestInicial.Mes, 1) &&
-                                                                    x.Fecha <= new DateTime(presupuestFinal!.Anio, presupuestFinal.Mes, totalDaysInmonth, 23, 59, 59) &&
-                                                                    x.UsuarioId == userId,
-                                                                orderBy: x => x.OrderBy(x => x.Fecha),
-                                                                includeProperties: nameof(GastoEncabezado.Detalles)
-                                                            )
-                                                )
-                                                .GroupBy(x => x.Fecha.Month)
-                                                .ToDictionary(x=> x.Key, x => x.ToList());
-
-                foreach (var item in monthInNumbers)
+                foreach (var itemMonth in monthInNumbers)
                 {
-                    if(gastos.TryGetValue(item, out List<GastoEncabezado>? gasto)){
-                        dataGastos.Add(gasto.Sum(x => x.MontoTotal));
-                        continue;
+                    if (presupuestos.Any())
+                    {
+                        var presupuesto = presupuestos.FirstOrDefault(x => x.Anio == itemYear && x.Mes == itemMonth);
+                        
+                        data.Add(presupuesto is not null ? presupuesto.MontoTotal : 0);
+                    }
+                    else
+                    {
+                        data.Add(0);
                     }
 
-                    dataGastos.Add(0);
+                    if (gastosPorAnioMes.Any())
+                    {
+                        var gasto = gastosPorAnioMes.FirstOrDefault(x => x.Key.Anio == itemYear && x.Key.Mes == itemMonth);
+
+                        dataGastos.Add(gasto is not null ? gasto.Sum(x => x.MontoTotal) : 0);
+                    }
+                    else
+                    {
+                        dataGastos.Add(0);
+                    }
                 }
             }
 
