@@ -29,7 +29,17 @@ function loadDataTable() {
             { "data": "nombreComercio", "width": "15%" },
             { "data": "tipoDocumento", "width": "13%" },
             { "data": "numeroDocumento", "width": "9%" },
-            { "data": "montoTotal", "width": "13%" },
+            {
+                "data": "montoTotal",
+                "width": "13%",
+                "render": function (data, type, row) {
+                    if (type === 'display' || type === 'filter') {
+                        return row.montoTotalFormateado;
+                    }
+                    // Para ordenar y buscar, usa el valor decimal
+                    return row.montoTotal;
+                }
+            },
             { "data": "observaciones", "width": "22%" },
             {
                 "data": "id",

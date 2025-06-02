@@ -40,22 +40,22 @@
                             </div>
                             <div class="col-12 col-md-6">
                                 <label>Nombre Comercio</label>
-                                <input type="text" asp-for="GastoEncabezado.NombreComercio" class="form-control" placeholder="Ej: Falabella, Exito, Jumbo, Totto, Restaurante.etc" />
+                                <input type="text" asp-for="GastoEncabezado.NombreComercio" class="form-control" placeholder="Ej: Falabella, Exito, Jumbo, Totto, Restaurante.etc" maxlength="100" />
                                 <span asp-validation-for="GastoEncabezado.NombreComercio" class="text-danger"></span>
                             </div>
                             <div class="col-12 col-md-6">
                                 <label>Tipo Documento (Opcional)</label>
-                                <input type="text" asp-for="GastoEncabezado.TipoDocumento" class="form-control" placeholder="Ej: Comprobante, Factura, Otro" />
+                                <input type="text" asp-for="GastoEncabezado.TipoDocumento" class="form-control" placeholder="Ej: Comprobante, Recibo, Factura, Otro" maxlength="50" />
                                 <span asp-validation-for="GastoEncabezado.TipoDocumento" class="text-danger"></span>
                             </div>
                             <div class="col-12 col-md-6">
                                 <label>Numero Documento (Opcional)</label>
-                                <input type="text" asp-for="GastoEncabezado.NumeroDocumento" class="form-control" placeholder="Numero Documento del deposito" />
+                                <input type="text" asp-for="GastoEncabezado.NumeroDocumento" class="form-control" placeholder="Numero Documento del deposito" maxlength="50" />
                                 <span asp-validation-for="GastoEncabezado.NumeroDocumento" class="text-danger"></span>
                             </div>
                             <div class="col-12 col-md-6">
                                 <label>Observaciones (opcional)</label>
-                                <textarea asp-for="GastoEncabezado.Observaciones" class="form-control" placeholder="Observaciones del deposito" rows="2"></textarea>
+                                <textarea asp-for="GastoEncabezado.Observaciones" class="form-control" placeholder="Observaciones del deposito" rows="2" maxlength="200"></textarea>
                                 <span asp-validation-for="GastoEncabezado.Observaciones" class="text-danger"></span>
                             </div>
                         </div>
@@ -76,7 +76,9 @@
                                 <div class="col-12 col-md-6">
                                     <div class="detalle-item mb-3 border rounded p-2 position-relative h-100">
                                         <button type="button" class="btn btn-outline-danger btn-sm eliminar-detalle position-absolute top-0 end-0 m-2" title="Eliminar detalle">
-                                            <i class="fas fa-times"></i>
+                                            <i class="fas fa-times" data-bs-toggle="tooltip"
+                                               data-bs-placement="top"
+                                               title="Eliminar detalle"></i>
                                         </button>
                                         <input type="hidden" name="Detalle[@i].Id" value="@Model.Detalle[i].Id" />
                                         <div class="mb-2">
@@ -85,12 +87,12 @@
                                         </div>
                                         <div class="mb-2">
                                             <label>Monto</label>
-                                            <input type="number" name="Detalle[@i].Monto" class="form-control" min="1" value="@Model.Detalle[i].Monto" />
+                                            <input type="number" name="Detalle[@i].Monto" class="form-control" min="1" value="@Model.Detalle[i].Monto" maxlength="12" />
                                             <span asp-validation-for="Detalle[@i].Monto" class="text-danger"></span>
                                         </div>
                                         <div class="mb-2">
                                             <label>Descripción</label>
-                                            <input type="text" name="Detalle[@i].Descripcion" class="form-control" value="@Model.Detalle[i].Descripcion" required />
+                                            <input type="text" name="Detalle[@i].Descripcion" class="form-control" value="@Model.Detalle[i].Descripcion" maxlength="200" required />
                                             <span asp-validation-for="Detalle[@i].Descripcion" class="text-danger"></span>
                                         </div>
                                     </div>
@@ -132,7 +134,9 @@
             colDiv.innerHTML = `
                 <div class="detalle-item mb-3 border rounded p-2 position-relative h-100">
                     <button type="button" class="btn btn-outline-danger btn-sm eliminar-detalle position-absolute top-0 end-0 m-2" title="Eliminar detalle">
-                        <i class="fas fa-times"></i>
+                        <i class="fas fa-times" data-bs-toggle="tooltip"
+                                               data-bs-placement="top"
+                                               title="Eliminar detalle"></i>
                     </button>
                     <input type="hidden" name="Detalle[${detalleIndex}].Id" value="0" />
                     <div class="mb-2">
@@ -141,12 +145,12 @@
                     </div>
                     <div class="mb-2">
                         <label>Monto</label>
-                        <input type="number" name="Detalle[${detalleIndex}].Monto" min="1" class="form-control" />
+                        <input type="number" name="Detalle[${detalleIndex}].Monto" min="1" class="form-control" maxlength="12" />
                         <span asp-validation-for="Detalle[${detalleIndex}].Monto" class="text-danger"></span>
                     </div>
                     <div class="mb-2">
                         <label>Descripción</label>
-                        <input type="text" name="Detalle[${detalleIndex}].Descripcion" required class="form-control" />
+                        <input type="text" name="Detalle[${detalleIndex}].Descripcion" required class="form-control" maxlength="200" />
                         <span asp-validation-for="Detalle[${detalleIndex}].Descripcion" class="text-danger"></span>
                     </div>
                 </div>

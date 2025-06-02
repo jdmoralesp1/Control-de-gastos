@@ -29,7 +29,7 @@
                         </div>
                         <div class="mb-3">
                             <label asp-for="MontoPresupuestado" class="form-label">Monto Presupuestado</label>
-                            <input type="number" asp-for="MontoPresupuestado" class="form-control" min="1" />
+                            <input type="number" asp-for="MontoPresupuestado" class="form-control" min="1" maxlength="12" />
                             <span asp-validation-for="MontoPresupuestado" class="text-danger"></span>
                         </div>
 

@@ -63,6 +63,7 @@ public class DepositoController : Controller
             x.Id,
             x.Fecha,
             x.FondoMonetario.Nombre,
+            x.Monto,
             StringUtil.ConvertToMoneyFormat(x.Monto),
             x.Observaciones
         ));

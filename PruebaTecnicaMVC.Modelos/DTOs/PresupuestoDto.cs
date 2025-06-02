@@ -4,6 +4,7 @@ public record struct PresupuestoDto
     int Id,
     string Mes,
     int Anio,
-    string MontoTotal,
+    decimal MontoTotal,
+    string MontoTotalFormateado,
     string FechaCreacion
 );

@@ -143,7 +143,7 @@
         <nav class="navbar navbar-expand-lg navbar-dark sticky-top">
             <div class="container-fluid">
                 <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">
-                    <i class="bi bi-cash-stack"></i>Control de Gastos
+                    <i class="bi bi-cash-stack"></i>Inicio
                 </a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent">
                     <span class="navbar-toggler-icon"></span>
@@ -151,33 +151,70 @@
                 <div class="collapse navbar-collapse" id="navbarContent">
                     <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                         <li class="nav-item">
-                            <a class="nav-link" asp-area="Admin" asp-controller="TipoGasto" asp-action="Index"><i class="bi bi-tags me-2">
-                                </i>Tipos de gasto
+                            <a class="nav-link" asp-area="Admin" asp-controller="TipoGasto" asp-action="Index">
+                                <i class="bi bi-tags me-2"></i>Tipos de gasto
+                                <i class="bi bi-info-circle ms-1"
+                                   data-bs-toggle="tooltip"
+                                   data-bs-placement="top"
+                                   title="Aquí puedes gestionar tus tipos de gastos. Ej: comida, ropa, servicios publicos, etc."></i>
                             </a>
                         </li>
-
-                        <li>
-                            <a class="nav-link" asp-area="Admin" asp-controller="FondoMonetario" asp-action="Index"><i class="bi bi-wallet2 me-2"></i>Fondos monetarios</a>
+                        <li class="nav-item">
+                            <a class="nav-link" asp-area="Admin" asp-controller="FondoMonetario" asp-action="Index">
+                                <i class="bi bi-wallet2 me-2"></i>
+                                Fondos monetarios
+                                <i class="bi bi-info-circle ms-1"
+                                   data-bs-toggle="tooltip"
+                                   data-bs-placement="top"
+                                   title="Aquí puedes gestionar tus fondos monetarios como el efectivo, cuenta bancaria, tarjetas de crédito, etc."></i>
+                            </a>
                         </li>
-
                         <li class="nav-item">
                             <a class="nav-link" asp-area="Presupuesto" asp-controller="Presupuesto" asp-action="Index">
                                 <i class="bi bi-clipboard-data me-1"></i>Presupuesto
+                                <i class="bi bi-info-circle ms-1"
+                                   data-bs-toggle="tooltip"
+                                   data-bs-placement="top"
+                                   title="Aquí puedes gestionar tu presupuesto según año y mes."></i>
                             </a>
                         </li>
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">
                                 <i class="bi bi-arrow-left-right me-1"></i>Movimientos
+                                <i class="bi bi-info-circle ms-1"
+                                   data-bs-toggle="tooltip"
+                                   data-bs-placement="top"
+                                   title="Aquí puedes gestionar tus depósitos (ingresos) y gastos (egresos)."></i>
                             </a>
                             <ul class="dropdown-menu">
-                                <li><a class="dropdown-item" asp-area="Movimientos" asp-controller="Deposito" asp-action="Index"><i class="bi bi-arrow-down-circle me-2"></i>Depósitos</a></li>
+                                <li>
+                                    <a class="dropdown-item" asp-area="Movimientos" asp-controller="Deposito" asp-action="Index">
+                                        <i class="bi bi-arrow-down-circle me-2"></i>Depósitos
+                                        <i class="bi bi-info-circle ms-1"
+                                           data-bs-toggle="tooltip"
+                                           data-bs-placement="top"
+                                           title="Aquí puedes agregar dinero a tus tipos de gasto."></i>
+                                    </a>
+                                </li>
                                 <li><hr class="dropdown-divider"></li>
-                                <li><a class="dropdown-item" asp-area="Movimientos" asp-controller="Gasto" asp-action="Index"><i class="bi bi-arrow-up-circle me-2"></i>Gastos</a></li>
+                                <li>
+                                    <a class="dropdown-item" asp-area="Movimientos" asp-controller="Gasto" asp-action="Index">
+                                        <i class="bi bi-arrow-up-circle me-2"></i>Gastos
+                                        <i class="bi bi-info-circle ms-1"
+                                           data-bs-toggle="tooltip"
+                                           data-bs-placement="top"
+                                           title="Aquí puedes gestionar tus gastos diarios para llevar un control."></i>
+                                    </a>
+                                </li>
                             </ul>
                         </li>
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">
                                 <i class="bi bi-bar-chart me-1"></i>Reportes
+                                <i class="bi bi-info-circle ms-1"
+                                   data-bs-toggle="tooltip"
+                                   data-bs-placement="top"
+                                   title="Aquí puedes visualizar una comparativa de tu presupuesto vs gastos."></i>
                             </a>
                             <ul class="dropdown-menu">
                                 <li>
@@ -198,7 +235,7 @@
                     <div class="dropdown">
                         <a class="d-flex align-items-center text-white text-decoration-none dropdown-toggle" href="#" id="userDropdown" data-bs-toggle="dropdown" aria-expanded="false" style="cursor:pointer;">
                             <i class="bi bi-person-circle me-2"></i>
-                            <span>Usuario</span>
+                            <span>Admin</span>
                         </a>
                         <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
                             <li>
@@ -227,7 +264,7 @@
 
     <footer class="py-3 mt-auto">
         <div class="container d-flex flex-wrap justify-content-between align-items-center">
-            <p class="col-md-4 mb-0 text-muted">&copy; 2025 PruebaTecnicaMVC</p>
+            <p class="col-md-4 mb-0 text-muted">&copy; 2025 Control Gastos - Juan David Morales</p>
             <ul class="nav col-md-4 justify-content-end">
                 <li class="nav-item"><a href="#" class="nav-link px-2 text-muted">Inicio</a></li>
                 <li class="nav-item"><a href="#" class="nav-link px-2 text-muted">Acerca de</a></li>

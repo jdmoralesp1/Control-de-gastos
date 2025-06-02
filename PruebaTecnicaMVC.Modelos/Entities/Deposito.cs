@@ -15,7 +15,7 @@ public class Deposito
     [Column(TypeName = "decimal(18,2)")]
     public decimal Monto { get; set; }
 
-    [StringLength(500)]
+    [StringLength(200)]
     public string? Observaciones { get; set; }
 
     public DateTime FechaCreacion { get; set; } = TimeUtil.GetDateTimeColombia();

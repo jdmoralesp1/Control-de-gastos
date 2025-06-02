@@ -15,7 +15,7 @@ public class TipoGasto
     [StringLength(100)]
     public string Nombre { get; set; }
 
-    [StringLength(500)]
+    [StringLength(100)]
     public string? Descripcion { get; set; }
 
     public bool Activo { get; set; } = true;

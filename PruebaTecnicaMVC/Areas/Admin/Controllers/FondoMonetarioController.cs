@@ -65,6 +65,7 @@ public class FondoMonetarioController : Controller
             x.Nombre,
             x.Tipo,
             x.NumeroCuenta ?? "Sin numero de cuenta",
+            x.SaldoActual,
             StringUtil.ConvertToMoneyFormat(x.SaldoActual),
             TimeUtil.DateTimeToFormatDDMMYYYYHHmm(x.FechaCreacion)
         ));

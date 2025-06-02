@@ -194,13 +194,13 @@
 
                     <div class="mb-3">
                         <label asp-for="UserName" class="form-label">Usuario</label>
-                        <input asp-for="UserName" class="form-control" placeholder="Ingrese su usuario" />
+                        <input asp-for="UserName" class="form-control" placeholder="Ingrese su usuario" maxlength="50" />
                         <span asp-validation-for="UserName" class="text-danger"></span>
                     </div>
 
                     <div class="mb-4">
                         <label asp-for="Password" class="form-label">Contraseña</label>
-                        <input asp-for="Password" class="form-control" type="password" placeholder="Ingrese su contraseña" />
+                        <input asp-for="Password" class="form-control" type="password" placeholder="Ingrese su contraseña" maxlength="50" />
                         <span asp-validation-for="Password" class="text-danger"></span>
                     </div>
 

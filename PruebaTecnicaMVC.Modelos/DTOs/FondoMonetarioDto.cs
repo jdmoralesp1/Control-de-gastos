@@ -5,6 +5,7 @@ public record struct FondoMonetarioDto
     string Nombre,
     string Tipo,
     string? NumeroCuenta,
-    string SaldoActual,
+    decimal SaldoActual,
+    string SaldoActualFormateado,
     string FechaCreacion
 );

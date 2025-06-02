@@ -4,6 +4,7 @@ public record struct DepositoDto
     int Id,
     DateTime Fecha,
     string FondoMonetario,
-    string Monto,
+    decimal Monto,
+    string MontoFormateado,
     string? Observaciones
 );

@@ -58,6 +58,7 @@ public class PresupuestoController : Controller
             x.Id,
             StringUtil.GetMonthName(x.Mes),
             x.Anio,
+            x.MontoTotal,
             StringUtil.ConvertToMoneyFormat(x.MontoTotal),
             TimeUtil.DateTimeToFormatDDMMYYYYHHmm(x.FechaCreacion)
         ));

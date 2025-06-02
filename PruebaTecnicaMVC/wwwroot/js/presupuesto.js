@@ -25,10 +25,46 @@ function loadDataTable() {
             "url": "/Presupuesto/Presupuesto/GetAll"
         },
         "columns": [
-            { "data": "anio", "width": "20%" },
-            { "data": "mes", "width": "20%" },
-            { "data": "montoTotal", "width": "20%" },
-            { "data": "fechaCreacion", "width": "20%" },
+            { "data": "anio", "width": "10%" },
+            { "data": "mes", "width": "15%" },
+            {
+                "data": "montoTotal",
+                "width": "15%",
+                "render": function (data, type, row) {
+                    if (type === 'display' || type === 'filter') {
+                        return row.montoTotalFormateado;
+                    }
+                    // Para ordenar y buscar, usa el valor decimal
+                    return row.montoTotal;
+                }
+            },
+            {
+                "data": "fechaCreacion",
+                "type": "date",
+                "width": "20%",
+                "render": function (data, type, row) {
+                    if (!data) return "";
+                    // Si el formato no es ISO, intenta convertirlo
+                    let dateStr = data;
+                    // Si el formato es "DD-MM-YYYY HH:mm", conviértelo a "YYYY-MM-DDTHH:mm"
+                    if (/^\d{2}-\d{2}-\d{4} \d{2}:\d{2}$/.test(data)) {
+                        const [d, m, y, h, min] = data.match(/\d+/g);
+                        dateStr = `${y}-${m}-${d}T${h}:${min}`;
+                    }
+                    var dateObj = new Date(dateStr);
+                    if (isNaN(dateObj.getTime())) return ""; // Si la fecha no es válida, retorna vacío
+                    if (type === 'display' || type === 'filter') {
+                        let day = String(dateObj.getDate()).padStart(2, '0');
+                        let month = String(dateObj.getMonth() + 1).padStart(2, '0');
+                        let year = dateObj.getFullYear();
+                        let hora = String(dateObj.getHours()).padStart(2, '0');
+                        let minuto = String(dateObj.getMinutes()).padStart(2, '0');
+                        return `${day}-${month}-${year} ${hora}:${minuto}`;
+                    }
+                    return data;
+                }
+
+            },
             {
                 "data": "id",
                 "render": function (data) {

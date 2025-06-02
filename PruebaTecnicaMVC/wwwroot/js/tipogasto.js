@@ -24,10 +24,27 @@ function loadDataTable() {
             "url": "/Admin/TipoGasto/GetAll?inicial=1"
         },
         "columns": [
-            { "data": "codigo", "width": "7%" },
-            { "data": "nombre", "width": "23%" },
-            { "data": "descripcion", "width": "40%" },
-            { "data": "fechaCreacion", "width": "20%" },
+            { "data": "codigo", "width": "7%", "type": "tg-codigo" },
+            {
+                "data": "nombre",
+                "width": "43%",
+                "render": function (data, type, row) {
+                    if (typeof data === "string" && data.length > 30) {
+                        return data.substring(0, 70) + "...";
+                    }
+                    return data;
+                }
+            },
+            {
+                "data": "descripcion",
+                "width": "60%",
+                "render": function (data, type, row) {
+                    if (typeof data === "string" && data.length > 30) {
+                        return data.substring(0, 70) + "...";
+                    }
+                    return data;
+                }
+            },
             {
                 "data": "id",
                 "render": function (data) {
@@ -46,6 +63,16 @@ function loadDataTable() {
         ]
     });
 }
+
+// Ordenamiento natural para códigos tipo TG1, TG2, TG10, etc.
+jQuery.extend(jQuery.fn.dataTable.ext.type.order, {
+    "tg-codigo-pre": function (data) {
+        // Extrae el número después de TG
+        var match = data.match(/^TG(\d+)$/i);
+        return match ? parseInt(match[1], 10) : 0;
+    }
+});
+
 
 function Delete(url) {
     Swal.fire({

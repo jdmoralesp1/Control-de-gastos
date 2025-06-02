@@ -83,6 +83,7 @@ public class GastoController : Controller
             x.NombreComercio,
             x.TipoDocumento,
             x.NumeroDocumento,
+            x.MontoTotal,
             StringUtil.ConvertToMoneyFormat(x.MontoTotal),
             x.Observaciones
         ));

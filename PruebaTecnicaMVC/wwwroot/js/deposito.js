@@ -43,7 +43,17 @@ function loadDataTable() {
                 }
             },
             { "data": "fondoMonetario", "width": "20%" },
-            { "data": "monto", "width": "20%" },
+            {
+                "data": "monto",
+                "width": "20%",
+                "render": function (data, type, row) {
+                    if (type === 'display' || type === 'filter') {
+                        return row.montoFormateado;
+                    }
+                    // Para ordenar y buscar, usa el valor decimal
+                    return row.monto;
+                }
+            },
             { "data": "observaciones", "width": "30%" },
             {
                 "data": "id",

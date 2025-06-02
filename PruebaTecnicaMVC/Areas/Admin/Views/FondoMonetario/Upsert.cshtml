@@ -26,17 +26,17 @@
 
                         <div class="mb-3">
                             <label asp-for="Nombre" class="form-label">Nombre</label>
-                            <input asp-for="Nombre" class="form-control" placeholder="Ej: Bancolombia, Efectivo, Casa, Cheque, etc." />
+                            <input asp-for="Nombre" class="form-control" placeholder="Ej: Bancolombia, Efectivo, Casa, Cheque, etc." maxlength="100" />
                             <span asp-validation-for="Nombre" class="text-danger"></span>
                         </div>
                         <div class="mb-3">
                             <label asp-for="Tipo" class="form-label">Tipo</label>
-                            <input asp-for="Tipo" class="form-control" placeholder="Ej: Banco, Caja, Efectivo" />
+                            <input asp-for="Tipo" class="form-control" placeholder="Ej: Banco, Caja, Efectivo" maxlength="50" />
                             <span asp-validation-for="Tipo" class="text-danger"></span>
                         </div>
                         <div class="mb-3">
                             <label asp-for="NumeroCuenta" class="form-label">Numero de Cuenta (opcional)</label>
-                            <input asp-for="NumeroCuenta" class="form-control" placeholder="Numero de cuenta del fondo monetario" />
+                            <input asp-for="NumeroCuenta" class="form-control" placeholder="Numero de cuenta del fondo monetario" maxlength="12" />
                             <span asp-validation-for="NumeroCuenta" class="text-danger"></span>
                         </div>
 

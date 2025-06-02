@@ -12,11 +12,11 @@ public class GastoEncabezado
 
     public int FondoMonetarioId { get; set; }
 
-    [StringLength(500)]
+    [StringLength(200)]
     public string? Observaciones { get; set; }
 
     [Required]
-    [StringLength(200)]
+    [StringLength(100)]
     public string NombreComercio { get; set; }
 
     [StringLength(50)]

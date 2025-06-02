@@ -35,12 +35,12 @@
                         </div>
                         <div class="mb-3">
                             <label asp-for="Monto" class="form-label">Monto</label>
-                            <input type="number" asp-for="Monto" class="form-control" min="1" />
+                            <input type="number" asp-for="Monto" class="form-control" min="1" maxlength="12" />
                             <span asp-validation-for="Monto" class="text-danger"></span>
                         </div>
                         <div class="mb-3">
                             <label asp-for="Observaciones" class="form-label">Observaciones</label>
-                            <textarea asp-for="Observaciones" class="form-control" placeholder="Observaciones del depósito" rows="4"></textarea>
+                            <textarea asp-for="Observaciones" class="form-control" placeholder="Observaciones del depósito" maxlength="200" rows="4"></textarea>
                             <span asp-validation-for="Observaciones" class="text-danger"></span>
                         </div>
 

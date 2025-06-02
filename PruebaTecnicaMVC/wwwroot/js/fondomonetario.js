@@ -24,11 +24,38 @@ function loadDataTable() {
             "url": "/Admin/FondoMonetario/GetAll?inicial=1"
         },
         "columns": [
-            { "data": "nombre", "width": "25%" },
-            { "data": "tipo", "width": "15%" },
-            { "data": "numeroCuenta", "width": "10%" },
-            { "data": "saldoActual", "width": "15%" },
-            { "data": "fechaCreacion", "width": "20%" },
+            {
+                "data": "nombre",
+                "width": "10%",
+                "render": function (data, type, row) {
+                    if (typeof data === "string" && data.length > 30) {
+                        return data.substring(0, 30) + "...";
+                    }
+                    return data;
+                }
+            },
+            {
+                "data": "tipo", "width": "10%",
+                "render": function (data, type, row) {
+                    if (typeof data === "string" && data.length > 30) {
+                        return data.substring(0, 30) + "...";
+                    }
+                    return data;
+                }
+            },
+            { "data": "numeroCuenta", "width": "20%" },
+            {
+                "data": "saldoActual",
+                "width": "20%",
+                "render": function (data, type, row) {
+                    if (type === 'display' || type === 'filter') {
+                        return row.saldoActualFormateado;
+                    }
+                    // Para ordenar y buscar, usa el valor decimal
+                    return row.saldoActual;
+                }
+            },
+            { "data": "fechaCreacion", "width": "10%" },
             {
                 "data": "id",
                 "render": function (data) {
@@ -42,7 +69,7 @@ function loadDataTable() {
                             </a>
                         </div>
                     `;
-                }, "width": "15%"
+                }, "width": "10%"
             }
         ]
     });

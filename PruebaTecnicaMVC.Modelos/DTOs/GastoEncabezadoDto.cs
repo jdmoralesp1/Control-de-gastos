@@ -7,6 +7,7 @@ public record struct GastoEncabezadoDto
     string NombreComercio,
     string? TipoDocumento,
     string? NumeroDocumento,
-    string MontoTotal,
+    decimal MontoTotal,
+    string MontoTotalFormateado,
     string? Observaciones
 );
