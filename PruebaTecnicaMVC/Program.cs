@@ -37,6 +37,12 @@ builder.Services.AddAuthentication()
 
 builder.Services.AddHttpContextAccessor();
 
+builder.Services.ConfigureApplicationCookie(options =>
+{
+    options.LoginPath = "/Identity/Login/Index";
+    options.AccessDeniedPath = "/Identity/Account/AccessDenied";
+});
+
 #region Services
 
 object value = builder.Services.AddApplicationLayer();
@@ -81,7 +87,9 @@ app.UseStatusCodePagesWithReExecute("/Dashboard/Home/ErrorGenerico/{0}");
 
 app.UseRouting();
 
+app.UseAuthentication();
 app.UseAuthorization();
+
 
 app.MapControllerRoute(
     name: "default",
