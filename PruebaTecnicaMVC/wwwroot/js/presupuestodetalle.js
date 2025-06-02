@@ -11,7 +11,7 @@ function loadDataTable() {
             "zeroRecords": "Ningun Registro",
             "info": "Mostrando página _PAGE_ de _PAGES_",
             "infoEmpty": "No hay registros",
-            "infoFiltered": "(filtered from _MAX_ total registros)",
+            "infoFiltered": "(Filtrado de un total de _MAX_ registros)",
             "search": "Buscar",
             "paginate": {
                 "first": "Primero",
