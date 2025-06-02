@@ -40,7 +40,16 @@ function loadDataTable() {
                     return row.montoTotal;
                 }
             },
-            { "data": "observaciones", "width": "22%" },
+            {
+                "data": "observaciones",
+                "width": "22%",
+                "render": function (data, type, row) {
+                    if (typeof data === "string" && data.length > 30) {
+                        return data.substring(0, 30) + "...";
+                    }
+                    return data;
+                }
+            },
             {
                 "data": "id",
                 "render": function (data) {
